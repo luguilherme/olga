@@ -521,21 +521,8 @@ function loadFile(file){
   var reader=new FileReader();
   reader.onload=function(ev){
     var buffer=ev.target.result;
-    var workerSrc=document.getElementById('workerScript').textContent;
-    var blob=new Blob([workerSrc],{type:'application/javascript'});
-    var url=URL.createObjectURL(blob);
-    var worker=new Worker(url);
-    worker.postMessage({buffer:buffer},{transfer:[buffer]});
-    worker.onmessage=function(e){
-      URL.revokeObjectURL(url);worker.terminate();
-      applyParsedData(e.data,file.name);
-    };
-    worker.onerror=function(){
-      URL.revokeObjectURL(url);worker.terminate();
-      var reader2=new FileReader();
-      reader2.onload=function(ev2){parseWorkbook(ev2.target.result,file.name);};
-      reader2.readAsArrayBuffer(file);
-    };
+    // defer one frame so the browser paints the spinner before blocking
+    setTimeout(function(){parseWorkbook(buffer,file.name);},32);
   };
   reader.readAsArrayBuffer(file);
 }
@@ -744,7 +731,7 @@ function renderGrade(){
   if(!ds.length){gw.style.display='none';ge.style.display='flex';return;}
   ge.style.display='none';gw.style.display='block';
   var co=[],cs=new Set();ds.forEach(function(s){if(!cs.has(s.cinema)){cs.add(s.cinema);co.push(s.cinema);}});
-  var minH=24,maxH=0;ds.forEach(function(s){if(!s.time)return;minH=Math.min(minH,s.time.h);maxH=Math.max(maxH,s.time.h+3);});
+  var minH=24,maxH=0;ds.forEach(function(s){if(!s.time)return;minH=Math.min(minH,s.time.h);var totalM=0;s.filmes.forEach(function(c){var f=filmesMap[c];if(!f)return;var d=f.duracao||'';if(/^\d{1,2}:\d{2}/.test(d)){var p=d.split(':').map(Number);totalM+=p[0]*60+p[1];}});var endH=s.time.h+(s.time.m+(totalM||90))/60;maxH=Math.max(maxH,endH);});
   if(minH===24)minH=9;minH=Math.max(0,minH-1);maxH=Math.min(26,maxH+1);
   var PPM=2.4,gridH=(maxH-minH)*60*PPM;
   chr.innerHTML='';var gh=document.createElement('div');gh.className='time-gutter-header';chr.appendChild(gh);
@@ -758,7 +745,10 @@ function renderGrade(){
     for(var h=minH;h<=maxH;h++){var line=document.createElement('div');line.className='hour-line';line.style.top=((h-minH)*60*PPM)+'px';col.appendChild(line);}
     ds.filter(function(s){return s.cinema===cinema;}).forEach(function(s){
       if(!s.time)return;
-      var tm=(s.time.h-minH)*60+s.time.m,dur2=Math.max(60,s.filmes.length*25);
+      var totalMinsS=0;
+      s.filmes.forEach(function(c){var f=filmesMap[c];if(!f)return;var d=f.duracao||'';if(/^\d{1,2}:\d{2}/.test(d)){var p=d.split(':').map(Number);totalMinsS+=p[0]*60+p[1];}});
+      var dur2=totalMinsS>0?totalMinsS:Math.max(60,s.filmes.length*25);
+      var tm=(s.time.h-minH)*60+s.time.m;
       var c2=eventColors[s.evento]||{bg:'#555',text:'#fff'};
       var dimmed=s.evento&&!activeEventsGrade.has(s.evento);
       var blk=document.createElement('div');blk.className='session-block'+(dimmed?' dimmed':'');
@@ -776,8 +766,11 @@ function renderGrade(){
 
 function showTooltip(ev,s){
   var tip=document.getElementById('tooltip');
+  var totalMinsS=0;
+  s.filmes.forEach(function(c){var f=filmesMap[c];if(!f)return;var d=f.duracao||'';if(/^\d{1,2}:\d{2}/.test(d)){var p=d.split(':').map(Number);totalMinsS+=p[0]*60+p[1];}});
+  var durStr=totalMinsS>0?Math.floor(totalMinsS/60)+'h'+String(totalMinsS%60).padStart(2,'0'):'';
   var fl=s.filmes.map(function(c){var f=filmesMap[c];if(!f)return'<div class="tt-film">'+c+'</div>';return'<div class="tt-film"><span>'+f.titulo+'</span> · '+c+'</div>';}).join('');
-  tip.innerHTML='<div class="tt-name">'+s.nome+'</div><div class="tt-row">⏰ <span>'+(s.time?s.time.str:'—')+'</span></div><div class="tt-row">🎭 <span>'+s.cinema+'</span></div>'+(s.evento?'<div class="tt-row">📋 <span>'+s.evento+'</span></div>':'')+(fl?'<div class="tt-films">'+fl+'</div>':'');
+  tip.innerHTML='<div class="tt-name">'+s.nome+'</div><div class="tt-row">⏰ <span>'+(s.time?s.time.str:'—')+(durStr?' · '+durStr:'')+'</span></div><div class="tt-row">🎭 <span>'+s.cinema+'</span></div>'+(s.evento?'<div class="tt-row">📋 <span>'+s.evento+'</span></div>':'')+(fl?'<div class="tt-films">'+fl+'</div>':'');
   tip.style.display='block';moveTooltip(ev);
 }
 function moveTooltip(ev){var tip=document.getElementById('tooltip');var x=ev.clientX+16,y=ev.clientY-8,tw=tip.offsetWidth,th2=tip.offsetHeight;tip.style.left=(x+tw>window.innerWidth?x-tw-32:x)+'px';tip.style.top=(y+th2>window.innerHeight?y-th2:y)+'px';}
