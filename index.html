@@ -445,10 +445,6 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
     <div class="empty-state" id="buscaLoading" style="display:none">
       <div class="icon" style="animation:spin 1s linear infinite;display:inline-block">⟳</div>
       <p>Carregando filmes…</p>
-      <div style="width:220px;height:2px;background:var(--border);overflow:hidden;margin-top:4px;">
-        <div id="buscaBar" style="height:100%;background:var(--accent);width:0%;transition:width 0.4s ease;"></div>
-      </div>
-      <div id="buscaEta" style="font-family:var(--mono);font-size:9px;color:var(--text-muted);letter-spacing:0.1em;margin-top:2px;">aguarde…</div>
     </div>
     <div id="busca-results" style="display:none"></div>
   </div>
@@ -626,24 +622,9 @@ function switchMode(mode){
   if(mode==='grade')renderGrade();
   if(mode==='busca'){
     var bl=document.getElementById('buscaLoading'),be2=document.getElementById('buscaEmpty'),br=document.getElementById('busca-results');
-    var bar=document.getElementById('buscaBar'),eta=document.getElementById('buscaEta');
     bl.style.display='flex';be2.style.display='none';br.style.display='none';
     document.getElementById('searchInput').focus();
-    var BUSCA_MIN=30000;
-    var buscaStart=Date.now();
-    if(bar)bar.style.width='0%';
-    var buscaBarInterval=setInterval(function(){
-      var pct=Math.min(95,(Date.now()-buscaStart)/BUSCA_MIN*100);
-      if(bar)bar.style.width=pct+'%';
-      var rem=Math.max(0,Math.ceil((BUSCA_MIN-(Date.now()-buscaStart))/1000));
-      if(eta)eta.textContent=rem>0?rem+'s…':'finalizando…';
-    },200);
-    setTimeout(function(){
-      clearInterval(buscaBarInterval);
-      if(bar)bar.style.width='100%';
-      bl.style.display='none';
-      renderBuscaResults();
-    },BUSCA_MIN);
+    setTimeout(function(){bl.style.display='none';renderBuscaResults();},0);
   }
 }
 
