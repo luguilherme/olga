@@ -452,6 +452,49 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 
 </div><!-- /main-content -->
 
+<!-- Worker script: parsed by Blob, runs off-thread -->
+<script id="workerScript" type="javascript/worker">
+importScripts(self._xlsxUrl||'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+
+function fmtDateStr(val){if(!val)return'—';var d=new Date(val);if(isNaN(d))return val;return d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit',year:'numeric'});}
+function fmtTimeStr(val){if(!val)return'—';if(typeof val==='string'&&/^\d{1,2}:\d{2}/.test(val))return val.slice(0,5);var d=new Date(val);if(!isNaN(d))return d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});return val;}
+function parseDate(v){if(!v)return null;var d=new Date(v);if(!isNaN(d))return new Date(d.getFullYear(),d.getMonth(),d.getDate());var m=v.match(/(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})/);if(m)return new Date(+m[3]<100?2000+Number(m[3]):+m[3],m[2]-1,+m[1]);return null;}
+function parseTime(v){if(!v)return{h:0,m:0,str:'?'};var h=0,m=0;if(typeof v==='string'&&/^\d{1,2}:\d{2}/.test(v)){var p=v.split(':').map(Number);h=p[0];m=p[1];}else{var d=new Date(v);if(!isNaN(d)){h=d.getHours();m=d.getMinutes();}}return{h:h,m:m,str:String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')};}
+
+self.onmessage=function(e){
+  var buffer=e.data.buffer;
+  var wb=XLSX.read(buffer,{type:'array',cellDates:true});
+  var filmesMap={},filmesArr=[];
+  var wsF=wb.Sheets['filmes'];
+  if(wsF){
+    var rows=XLSX.utils.sheet_to_json(wsF,{header:1,raw:false,dateNF:'dd/mm/yyyy'});
+    for(var i=1;i<rows.length;i++){
+      var r=rows[i];var codigo=(r[1]||'').toString().trim();
+      if(!codigo||codigo==='-'||codigo==='0')continue;
+      var f={evento:r[0]||'',codigo:codigo,hd:r[2]||'',titulo:r[3]||'',idioma:r[4]||'',legenda:r[5]||'',col_g:r[6]||'',vf:r[7]||'',lente:r[8]||'',som:r[9]||'',col_k:r[10]||'',kdm:r[11]||'',status:r[12]||'',col_n:r[13]||'',obs:r[14]||'',cpl:r[15]||'',resolucao:r[16]||'',duracao:r[19]||'',gb:r[21]||'',fps:r[23]||'',cplOV:r[24]||''};
+      filmesMap[codigo]=f;filmesArr.push(f);
+    }
+  }
+  var sessoesArr=[],sessoesMap={},buscaReverseSessoes={};
+  var wsS=wb.Sheets['sessões']||wb.Sheets['sessoes'];
+  if(wsS){
+    var rows2=XLSX.utils.sheet_to_json(wsS,{header:1,raw:false,dateNF:'dd/mm/yyyy'});
+    for(var i=1;i<rows2.length;i++){
+      var r=rows2[i];var nome=(r[0]||'').toString().trim();if(!nome)continue;
+      var codes=[];for(var f2=4;f2<=13;f2++){var c=(r[f2]||'').toString().trim();if(c&&c!=='-'&&!/^=/.test(c))codes.push(c);}
+      var evento=codes.length&&filmesMap[codes[0]]?filmesMap[codes[0]].evento:'';
+      var s={nome:nome,cinema:r[1]||'',dia:fmtDateStr(r[2]),hora:fmtTimeStr(r[3]),filmes:codes,date:parseDate(r[2]),time:parseTime(r[3]),evento:evento};
+      sessoesArr.push(s);sessoesMap[nome]=s;
+      codes.forEach(function(c){if(!buscaReverseSessoes[c])buscaReverseSessoes[c]=[];buscaReverseSessoes[c].push(nome);});
+    }
+  }
+  var evSet=new Set();
+  filmesArr.forEach(function(f){if(f.evento)evSet.add(f.evento);});
+  sessoesArr.forEach(function(s){if(s.evento)evSet.add(s.evento);});
+  self.postMessage({filmesMap:filmesMap,filmesArr:filmesArr,sessoesArr:sessoesArr,sessoesMap:sessoesMap,buscaReverseSessoes:buscaReverseSessoes,events:Array.from(evSet)});
+};
+</script>
+
 <script>
 var filmesMap={},filmesArr=[],sessoesArr=[],sessoesMap={};
 var buscaReverseSessoes={},eventColors={};
@@ -472,12 +515,58 @@ landingDrop.addEventListener('drop',function(e){e.preventDefault();landingDrop.c
 
 function loadFile(file){
   fileNameEl.textContent=file.name;
+  // show loading feedback
+  landingDrop.innerHTML='<div class="drop-icon" style="opacity:1;animation:spin 1s linear infinite;display:inline-block">⟳</div><div class="drop-label" style="color:var(--accent)">Processando…</div><div class="drop-sub">'+file.name+'</div>';
+
   var reader=new FileReader();
-  reader.onload=function(ev){parseWorkbook(ev.target.result);};
+  reader.onload=function(ev){
+    var buffer=ev.target.result;
+    var workerSrc=document.getElementById('workerScript').textContent;
+    var blob=new Blob([workerSrc],{type:'application/javascript'});
+    var url=URL.createObjectURL(blob);
+    var worker=new Worker(url);
+    worker.postMessage({buffer:buffer,xlsxUrl:'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'},{transfer:[buffer]});
+    worker.onmessage=function(e){
+      URL.revokeObjectURL(url);
+      worker.terminate();
+      applyParsedData(e.data,file.name);
+    };
+    worker.onerror=function(err){
+      URL.revokeObjectURL(url);
+      worker.terminate();
+      console.error('Worker error:',err);
+      // fallback: parse on main thread
+      var reader2=new FileReader();
+      reader2.onload=function(ev2){parseWorkbook(ev2.target.result,file.name);};
+      reader2.readAsArrayBuffer(file);
+    };
+  };
   reader.readAsArrayBuffer(file);
 }
 
-function parseWorkbook(data){
+function applyParsedData(d,filename){
+  filmesMap=d.filmesMap;filmesArr=d.filmesArr;
+  sessoesArr=d.sessoesArr;sessoesMap=d.sessoesMap;
+  buscaReverseSessoes=d.buscaReverseSessoes;
+  var events=d.events;
+  eventColors={};events.forEach(function(ev,i){eventColors[ev]=PALETTE[i%PALETTE.length];});
+  activeEventsGrade=new Set(events);activeEventsBusca=new Set(events);
+  dataLoaded=true;
+  ['tabFicha','tabGrade','tabBusca'].forEach(function(id){document.getElementById(id).disabled=false;});
+  ['modCardFicha','modCardGrade','modCardBusca'].forEach(function(id){document.getElementById(id).classList.remove('disabled');});
+  var sel=document.getElementById('sessionSelect');sel.innerHTML='<option value="">— selecionar sessão —</option>';
+  sessoesArr.forEach(function(s){var opt=document.createElement('option');opt.value=s.nome;opt.textContent=s.nome;sel.appendChild(opt);});
+  sel.disabled=false;
+  document.getElementById('searchInput').disabled=false;
+  buildGradeDays();window._gradeYearsOpen=null;buildGradeFilters();buildBuscaFilters();
+  fileNameEl.textContent=filename||'arquivo carregado';
+  fileNameEl.classList.add('loaded');
+  landingDrop.classList.add('loaded');
+  landingDrop.innerHTML='<div class="drop-icon" style="opacity:1">✓</div><div class="drop-label" style="color:var(--ok)">'+(filename||'arquivo carregado')+'</div><div class="drop-sub">arquivo carregado — selecione um módulo abaixo</div>';
+}
+
+function parseWorkbook(data,filename){
+  // main-thread fallback (used only if Worker fails)
   var wb=XLSX.read(data,{type:'array',cellDates:true});
   filmesMap={};filmesArr=[];
   var wsF=wb.Sheets['filmes'];
@@ -504,20 +593,8 @@ function parseWorkbook(data){
     }
   }
   var evSet=new Set();filmesArr.forEach(function(f){if(f.evento)evSet.add(f.evento);});sessoesArr.forEach(function(s){if(s.evento)evSet.add(s.evento);});
-  var events=Array.from(evSet);eventColors={};
-  events.forEach(function(ev,i){eventColors[ev]=PALETTE[i%PALETTE.length];});
-  activeEventsGrade=new Set(events);activeEventsBusca=new Set(events);
-  dataLoaded=true;
-  ['tabFicha','tabGrade','tabBusca'].forEach(function(id){document.getElementById(id).disabled=false;});
-  ['modCardFicha','modCardGrade','modCardBusca'].forEach(function(id){document.getElementById(id).classList.remove('disabled');});
-  var sel=document.getElementById('sessionSelect');sel.innerHTML='<option value="">— selecionar sessão —</option>';
-  Object.keys(sessoesMap).forEach(function(n){var opt=document.createElement('option');opt.value=n;opt.textContent=n;sel.appendChild(opt);});
-  sel.disabled=false;
-  document.getElementById('searchInput').disabled=false;
-  buildGradeDays();window._gradeYearsOpen=null;buildGradeFilters();buildBuscaFilters();
-  fileNameEl.classList.add('loaded');
-  landingDrop.classList.add('loaded');
-  landingDrop.innerHTML='<div class="drop-icon" style="opacity:1">✓</div><div class="drop-label" style="color:var(--ok)">'+fileNameEl.textContent+'</div><div class="drop-sub">arquivo carregado — selecione um módulo abaixo</div>';
+  var events=Array.from(evSet);
+  applyParsedData({filmesMap:filmesMap,filmesArr:filmesArr,sessoesArr:sessoesArr,sessoesMap:sessoesMap,buscaReverseSessoes:buscaReverseSessoes,events:events},filename);
 }
 
 function goHome(){
