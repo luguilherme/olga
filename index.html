@@ -93,6 +93,7 @@ select:disabled{opacity:0.35;cursor:not-allowed;}
 .mode-panel.active{display:block;}
 .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:var(--text-muted);padding:80px 40px;min-height:55vh;}
 .empty-state .icon{font-size:38px;opacity:0.22;}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .empty-state p{font-size:12px;text-align:center;line-height:1.9;font-family:var(--mono);}
 
 /* FICHA */
@@ -439,6 +440,10 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
       <div class="icon">🔍</div>
       <p>Digite para buscar filmes.</p>
     </div>
+    <div class="empty-state" id="buscaLoading" style="display:none">
+      <div class="icon" style="animation:spin 1s linear infinite;display:inline-block">⟳</div>
+      <p>Carregando filmes…</p>
+    </div>
     <div id="busca-results" style="display:none"></div>
   </div>
 </div>
@@ -541,7 +546,12 @@ function switchMode(mode){
     document.getElementById(m+'-panel').classList.toggle('active',m===mode);
   });
   if(mode==='grade')renderGrade();
-  if(mode==='busca'){renderBuscaResults();document.getElementById('searchInput').focus();}
+  if(mode==='busca'){
+    var bl=document.getElementById('buscaLoading'),be2=document.getElementById('buscaEmpty'),br=document.getElementById('busca-results');
+    bl.style.display='flex';be2.style.display='none';br.style.display='none';
+    document.getElementById('searchInput').focus();
+    setTimeout(function(){bl.style.display='none';renderBuscaResults();},0);
+  }
 }
 
 /* UTILS */
@@ -714,6 +724,7 @@ function efv(v){return(!v||v==='-'||v==='0')?'—':v;}// expand field value
 
 function renderBuscaResults(){
   var re=document.getElementById('busca-results'),be=document.getElementById('buscaEmpty');
+  document.getElementById('buscaLoading').style.display='none';
   var q=buscaQuery.toLowerCase();
   var filtered=filmesArr.filter(function(f){if(f.evento&&!activeEventsBusca.has(f.evento))return false;if(!q)return true;return f.titulo.toLowerCase().includes(q)||f.codigo.toLowerCase().includes(q)||f.cpl.toLowerCase().includes(q)||f.idioma.toLowerCase().includes(q)||f.obs.toLowerCase().includes(q)||f.status.toLowerCase().includes(q)||f.cplOV.toLowerCase().includes(q);});
   document.getElementById('resultCount').textContent=filtered.length+' filme'+(filtered.length!==1?'s':'');
