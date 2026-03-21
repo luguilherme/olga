@@ -457,6 +457,7 @@ var filmesMap={},filmesArr=[],sessoesArr=[],sessoesMap={};
 var buscaReverseSessoes={},eventColors={};
 var activeEventsGrade=new Set(),activeEventsBusca=new Set();
 var days=[],currentDay=null,buscaQuery='',dataLoaded=false,currentMode=null;
+var filteredFilmes=[];
 var PALETTE=[{bg:'#e8a020',text:'#000'},{bg:'#3dba6e',text:'#000'},{bg:'#4a9eff',text:'#000'},{bg:'#c87aff',text:'#000'},{bg:'#ff6b6b',text:'#000'},{bg:'#ffd93d',text:'#000'},{bg:'#6bcfcf',text:'#000'},{bg:'#ff9f43',text:'#000'}];
 
 var fileInput=document.getElementById('fileInput');
@@ -717,7 +718,45 @@ function statusBadge(v){if(!v||v==='-')return'';var u=v.toUpperCase();if(u.inclu
 
 function toggleExpand(idx){
   var card=document.getElementById('bcard-'+idx);
-  if(card)card.classList.toggle('expanded');
+  if(!card)return;
+  // lazy render: build expand content only on first open
+  var expandDiv=card.querySelector('.card-expand');
+  if(expandDiv&&expandDiv.dataset.lazy==='1'){
+    var f=filteredFilmes[idx];
+    if(f){
+      var kdm=(f.kdm||'').toLowerCase()==='sim';
+      function ef(label,value,cls){
+        var v=efv(value);if(v==='—'&&!value)return'';
+        return'<div class="expand-field"><div class="expand-label">'+label+'</div><div class="expand-value'+(cls?' '+cls:'')+'">'+v+'</div></div>';
+      }
+      var expandContent=[
+        ef('A · Evento',f.evento),
+        ef('B · Código',f.codigo),
+        ef('C · HD',f.hd),
+        ef('D · Título',f.titulo),
+        ef('E · Idioma',f.idioma),
+        ef('F · Legenda',f.legenda),
+        ef('H · VF',f.vf),
+        ef('I · Lente',f.lente),
+        ef('J · Som',f.som),
+        ef('K',f.col_k),
+        ef('L · KDM',f.kdm,kdm?'warn':''),
+        ef('M · Status',f.status),
+        ef('N',f.col_n),
+        ef('O · Observações',f.obs),
+        '<div class="expand-sep"></div>',
+        ef('P · CPL',f.cpl,'accent'),
+        ef('Y · CPL OV',f.cplOV,'accent'),
+        ef('Q · Resolução',f.resolucao),
+        ef('T · Duração',f.duracao),
+        ef('V · GB',f.gb),
+        ef('X · FPS',f.fps),
+      ].filter(Boolean).join('');
+      expandDiv.innerHTML='<div class="expand-grid">'+expandContent+'</div>';
+      delete expandDiv.dataset.lazy;
+    }
+  }
+  card.classList.toggle('expanded');
 }
 
 function efv(v){return(!v||v==='-'||v==='0')?'—':v;}// expand field value
@@ -730,6 +769,7 @@ function renderBuscaResults(){
   document.getElementById('resultCount').textContent=filtered.length+' filme'+(filtered.length!==1?'s':'');
   if(!filtered.length){re.style.display='none';be.style.display='flex';be.querySelector('p').textContent=q?'Nenhum resultado para "'+buscaQuery+'"':'Digite para buscar filmes.';return;}
   be.style.display='none';re.style.display='grid';
+  filteredFilmes=filtered;
 
   re.innerHTML=filtered.map(function(f,idx){
     var col=eventColors[f.evento]||null;
@@ -740,50 +780,15 @@ function renderBuscaResults(){
     var sess=buscaReverseSessoes[f.codigo]||[];
     var legStr=vf?'VF '+vf:leg;
 
-    // KDM — sempre visível
     var kdmTag=kdm
       ?'<span class="badge badge-kdm">⚠ KDM</span>'
       :'<span class="badge-kdm-no">kdm —</span>';
-
-    // resolucao — sempre no meta
     var resTag=res?'<div class="meta-tag"><span class="label">Res</span>'+res+'</div>':'';
-
-    // CPL panel com OV abaixo
     var cplOVRow=cplOV?'<div class="cpl-ov-row"><div class="cpl-ov-label">CPL OV</div><div class="cpl-ov-value">'+hl(cplOV,buscaQuery)+'</div></div>':'';
     var cplPanel=cpl
       ?'<div class="card-cpl"><div class="cpl-label">CPL</div><div class="cpl-value">'+hl(cpl,buscaQuery)+'</div><div class="cpl-sub">'+(fps?fps+'fps ':'')+(gb?gb+' GB':'')+'</div>'+cplOVRow+'</div>'
       :cplOV?'<div class="card-cpl"><div class="cpl-ov-row" style="margin:0;padding:0;border:none"><div class="cpl-ov-label">CPL OV</div><div class="cpl-ov-value">'+hl(cplOV,buscaQuery)+'</div></div></div>':'';
-
     var sessRow=sess.length?'<div class="card-sessions"><span class="sessions-label">Sessões</span>'+sess.map(function(s){return'<span class="session-tag" onclick="goToFicha(\''+s.replace(/'/g,"\\'")+'\')" title="Abrir ficha: '+s.replace(/"/g,'&quot;')+'">'+s+'</span>';}).join('')+'</div>':'';
-
-    // Painel expandido — colunas A B C D E F H I J K L M N O P Q T V X Y
-    function ef(label,value,cls){
-      var v=efv(value);if(v==='—'&&!value)return'';
-      return'<div class="expand-field"><div class="expand-label">'+label+'</div><div class="expand-value'+(cls?' '+cls:'')+'">'+v+'</div></div>';
-    }
-    var expandContent=[
-      ef('A · Evento',f.evento),
-      ef('B · Código',f.codigo),
-      ef('C · HD',f.hd),
-      ef('D · Título',f.titulo),
-      ef('E · Idioma',f.idioma),
-      ef('F · Legenda',f.legenda),
-      ef('H · VF',f.vf),
-      ef('I · Lente',f.lente),
-      ef('J · Som',f.som),
-      ef('K',f.col_k),
-      ef('L · KDM',f.kdm,kdm?'warn':''),
-      ef('M · Status',f.status),
-      ef('N',f.col_n),
-      ef('O · Observações',f.obs),
-      '<div class="expand-sep"></div>',
-      ef('P · CPL',f.cpl,'accent'),
-      ef('Y · CPL OV',f.cplOV,'accent'),
-      ef('Q · Resolução',f.resolucao),
-      ef('T · Duração',f.duracao),
-      ef('V · GB',f.gb),
-      ef('X · FPS',f.fps),
-    ].filter(Boolean).join('');
 
     return'<div class="film-card" id="bcard-'+idx+'" style="border-left-color:'+(col?col.bg:'var(--border)')+'">'+
       '<div>'+
@@ -809,7 +814,7 @@ function renderBuscaResults(){
           (obs?'<div class="card-obs">'+hl(obs,buscaQuery)+'</div>':'')+
         '</div>'+
         sessRow+
-        '<div class="card-expand"><div class="expand-grid">'+expandContent+'</div></div>'+
+        '<div class="card-expand" data-lazy="1"></div>'+
       '</div>'+
       cplPanel+
     '</div>';
