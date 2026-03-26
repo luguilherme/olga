@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -133,6 +134,8 @@ td.center{text-align:center;}
 .idioma-text{font-family:var(--mono);font-size:9px;color:var(--text-dim);border:1px solid var(--border);padding:1px 5px;border-radius:2px;display:inline-block;max-width:9.5em;white-space:normal;word-break:normal;overflow-wrap:normal;line-height:1.4;text-transform:lowercase;}
 .badge{display:inline-block;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.07em;padding:2px 6px;border-radius:2px;text-transform:uppercase;white-space:nowrap;}
 .badge-flat{background:rgba(100,180,255,0.13);color:#64b4ff;border:1px solid rgba(100,180,255,0.25);}
+.badge-flat200{background:rgba(80,210,200,0.13);color:#50d2c8;border:1px solid rgba(80,210,200,0.25);}
+.badge-flatc{background:rgba(100,200,140,0.13);color:#60c88a;border:1px solid rgba(100,200,140,0.25);}
 .badge-scope{background:rgba(180,100,255,0.13);color:#c87aff;border:1px solid rgba(180,100,255,0.25);}
 .badge-51{background:rgba(232,160,32,0.14);color:var(--accent);border:1px solid rgba(232,160,32,0.28);}
 .badge-stereo{background:rgba(232,160,32,0.07);color:#c8a060;border:1px solid rgba(232,160,32,0.15);}
@@ -271,6 +274,8 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 [data-theme="light"] mark{background:rgba(176,104,0,0.18);color:var(--accent);}
 /* badges */
 [data-theme="light"] .badge-flat{background:rgba(30,100,210,0.10);color:#1a5dcc;border-color:rgba(30,100,210,0.25);}
+[data-theme="light"] .badge-flat200{background:rgba(0,140,135,0.10);color:#007a75;border-color:rgba(0,140,135,0.25);}
+[data-theme="light"] .badge-flatc{background:rgba(20,140,90,0.10);color:#107840;border-color:rgba(20,140,90,0.25);}
 [data-theme="light"] .badge-scope{background:rgba(130,50,210,0.10);color:#7a28bb;border-color:rgba(130,50,210,0.25);}
 [data-theme="light"] .badge-51{background:rgba(176,104,0,0.10);color:var(--accent);border-color:rgba(176,104,0,0.25);}
 [data-theme="light"] .badge-stereo{background:rgba(176,104,0,0.06);color:#886200;border-color:rgba(176,104,0,0.15);}
@@ -622,7 +627,7 @@ function fmtTimeStr(val){if(!val)return'—';if(typeof val==='string'&&/^\d{1,2}
 function fmtDur(val){if(!val||val==='-')return'—';if(typeof val==='string'&&/^\d{1,2}:\d{2}/.test(val)){var p=val.split(':').map(Number);if(p[0]>0)return p[0]+'h'+String(p[1]).padStart(2,'0');return p[1]+'min';}return val;}
 function parseDate(v){if(!v)return null;var d=new Date(v);if(!isNaN(d))return new Date(d.getFullYear(),d.getMonth(),d.getDate());var m=v.match(/(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})/);if(m)return new Date(+m[3]<100?2000+Number(m[3]):+m[3],m[2]-1,+m[1]);return null;}
 function parseTime(v){if(!v)return{h:0,m:0,str:'?'};var h=0,m=0;if(typeof v==='string'&&/^\d{1,2}:\d{2}/.test(v)){var p=v.split(':').map(Number);h=p[0];m=p[1];}else{var d=new Date(v);if(!isNaN(d)){h=d.getHours();m=d.getMinutes();}}return{h:h,m:m,str:String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')};}
-function lenteBadge(v){var u=(v||'').toUpperCase();if(u.includes('FLAT'))return'<span class="badge badge-flat">FLAT</span>';if(u.includes('SCOPE'))return'<span class="badge badge-scope">SCOPE</span>';if(u.includes('2.0'))return'<span class="badge badge-scope">2.0:1</span>';if(v&&v!=='-')return'<span class="badge badge-flat">'+v+'</span>';return'—';}
+function lenteBadge(v){var u=(v||'').toUpperCase();if(u.includes('FLAT')&&u.includes('200'))return'<span class="badge badge-flat200">FLAT 200</span>';if(u.includes('FLAT')&&(u.includes('(C)')||u.replace(/\s/g,'').includes('(C)')))return'<span class="badge badge-flatc">FLAT (C)</span>';if(u.includes('FLAT'))return'<span class="badge badge-flat">FLAT</span>';if(u.includes('SCOPE'))return'<span class="badge badge-scope">SCOPE</span>';if(u.includes('2.0'))return'<span class="badge badge-scope">2.0:1</span>';if(v&&v!=='-')return'<span class="badge badge-flat">'+v+'</span>';return'—';}
 function somBadge(v){var u=(v||'').toUpperCase();if(u.includes('5.1'))return'<span class="badge badge-51">5.1</span>';if(u.includes('STEREO'))return'<span class="badge badge-stereo">Stereo</span>';if(v&&v!=='-')return'<span class="badge badge-stereo">'+v+'</span>';return'—';}
 function kdmFichaBadge(v){if((v||'').toLowerCase()==='sim')return'<span class="badge badge-kdm-sim">KDM !</span>';return'<span class="badge badge-kdm-nao">não</span>';}
 
