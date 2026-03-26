@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -219,6 +219,32 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 .session-tag:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
 .sessions-label{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);}
 .no-results{padding:60px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--text-muted);}
+
+/* INGEST */
+#ingest-container{padding:24px 32px 48px;max-width:1100px;margin:0 auto;}
+.ingest-total-bar{font-family:var(--mono);font-size:11px;color:var(--text-dim);background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:10px 16px;margin-bottom:22px;display:flex;align-items:center;gap:10px;}
+.ingest-total-bar strong{color:var(--accent);font-size:15px;margin-left:4px;}
+.ingest-cinema-block{margin-bottom:28px;}
+.ingest-cinema-header{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);padding:8px 14px;}
+.ingest-session{border:1px solid var(--border);border-top:none;background:var(--surface);}
+.ingest-session+.ingest-session{border-top:1px solid var(--border2);}
+.ingest-session-header{display:flex;align-items:center;gap:12px;padding:8px 14px 7px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
+.ingest-sess-name{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.06em;color:var(--accent);}
+.ingest-sess-meta{font-family:var(--mono);font-size:10px;color:var(--text-dim);}
+.ingest-sess-gb{font-family:var(--mono);font-size:10px;color:var(--text-dim);margin-left:auto;border:1px solid var(--border);padding:1px 8px;white-space:nowrap;}
+.ingest-film-list{padding:2px 0;}
+.ingest-film-row{display:grid;grid-template-columns:20px 1fr;gap:0;padding:7px 14px;border-bottom:1px solid var(--border);}
+.ingest-film-row:last-child{border-bottom:none;}
+.ingest-film-num{font-family:var(--mono);font-size:10px;color:var(--text-muted);padding-top:2px;}
+.ingest-film-body{display:flex;flex-direction:column;gap:4px;}
+.ingest-film-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
+.ingest-film-title{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--text);}
+.ingest-film-code{font-family:var(--mono);font-size:10px;color:var(--text-muted);}
+.ingest-film-gb{font-family:var(--mono);font-size:10px;color:var(--text-dim);margin-left:auto;white-space:nowrap;}
+.ingest-cpl-line{font-family:var(--mono);font-size:10px;color:var(--cpl-color);word-break:break-all;line-height:1.45;}
+.ingest-cplov-line{font-family:var(--mono);font-size:10px;color:rgba(93,220,138,0.45);word-break:break-all;line-height:1.45;display:flex;gap:5px;}
+.ingest-cplov-tag{font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(93,220,138,0.35);flex-shrink:0;padding-top:1px;}
+.ingest-no-cpl{font-family:var(--mono);font-size:10px;color:var(--text-muted);font-style:italic;}
 /* expand */
 .card-titulo-wrap{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
 .card-titulo-wrap:hover .card-titulo{color:var(--accent);}
@@ -361,6 +387,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
     <button class="nav-tab" id="tabFicha" disabled onclick="switchMode('ficha')"><span class="tab-icon">🎬</span> Ficha</button>
     <button class="nav-tab" id="tabGrade" disabled onclick="switchMode('grade')"><span class="tab-icon">📅</span> Grade</button>
     <button class="nav-tab" id="tabBusca" disabled onclick="switchMode('busca')"><span class="tab-icon">🔍</span> Busca</button>
+    <button class="nav-tab" id="tabIngest" disabled onclick="switchMode('ingest')"><span class="tab-icon">📥</span> Ingest</button>
   </nav>
   <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Alternar esquema de cores">
     <span class="theme-toggle-icon" id="themeIcon">☀</span>
@@ -391,6 +418,9 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
   <div class="event-filters" id="buscaEventFilters"></div>
   <span class="result-count" id="resultCount"></span>
 </div>
+<div class="mode-bar hidden" id="barIngest">
+  <div class="day-tabs" id="ingestDayTabs"></div>
+</div>
 
 <div id="landing">
   <div class="landing-badge">sistema de gestão de exibição</div>
@@ -401,7 +431,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
     <div class="drop-label">Carregar sistema_olga.xlsx</div>
     <div class="drop-sub">clique ou arraste o arquivo aqui</div>
   </div>
-  <div class="landing-modules">
+  <div class="landing-modules" style="grid-template-columns:repeat(4,1fr);max-width:860px;">
     <div class="module-card disabled" id="modCardFicha" onclick="moduleCardClick('ficha')">
       <div class="module-icon">🎬</div>
       <div class="module-name">Ficha</div>
@@ -416,6 +446,11 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
       <div class="module-icon">🔍</div>
       <div class="module-name">Busca</div>
       <div class="module-desc">Busca e filtragem de filmes na base de dados</div>
+    </div>
+    <div class="module-card disabled" id="modCardIngest" onclick="moduleCardClick('ingest')">
+      <div class="module-icon">📥</div>
+      <div class="module-name">Ingest</div>
+      <div class="module-desc">Cronograma de ingest por sala, com CPL e tamanhos</div>
     </div>
   </div>
 </div>
@@ -452,6 +487,13 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
       <p>Carregando filmes…</p>
     </div>
     <div id="busca-results" style="display:none"></div>
+  </div>
+  <div class="mode-panel" id="ingest-panel">
+    <div class="empty-state" id="ingestEmpty">
+      <div class="icon">📥</div>
+      <p>Nenhuma sessão encontrada.</p>
+    </div>
+    <div id="ingest-container" style="display:none"></div>
   </div>
 </div>
 
@@ -508,6 +550,7 @@ var buscaReverseSessoes={},eventColors={};
 var activeEventsGrade=new Set(),activeEventsBusca=new Set();
 var days=[],currentDay=null,buscaQuery='',dataLoaded=false,currentMode=null;
 var filteredFilmes=[];
+var ingestDays=[],currentIngestDay=null;
 var PALETTE=[{bg:'#e8a020',text:'#000'},{bg:'#3dba6e',text:'#000'},{bg:'#4a9eff',text:'#000'},{bg:'#c87aff',text:'#000'},{bg:'#ff6b6b',text:'#000'},{bg:'#ffd93d',text:'#000'},{bg:'#6bcfcf',text:'#000'},{bg:'#ff9f43',text:'#000'}];
 
 var fileInput=document.getElementById('fileInput');
@@ -540,13 +583,13 @@ function applyParsedData(d,filename){
   eventColors={};events.forEach(function(ev,i){eventColors[ev]=PALETTE[i%PALETTE.length];});
   activeEventsGrade=new Set(events);activeEventsBusca=new Set(events);
   dataLoaded=true;
-  ['tabFicha','tabGrade','tabBusca'].forEach(function(id){document.getElementById(id).disabled=false;});
-  ['modCardFicha','modCardGrade','modCardBusca'].forEach(function(id){document.getElementById(id).classList.remove('disabled');});
+  ['tabFicha','tabGrade','tabBusca','tabIngest'].forEach(function(id){document.getElementById(id).disabled=false;});
+  ['modCardFicha','modCardGrade','modCardBusca','modCardIngest'].forEach(function(id){document.getElementById(id).classList.remove('disabled');});
   var sel=document.getElementById('sessionSelect');sel.innerHTML='<option value="">— selecionar sessão —</option>';
   sessoesArr.forEach(function(s){var opt=document.createElement('option');opt.value=s.nome;opt.textContent=s.nome;sel.appendChild(opt);});
   sel.disabled=false;
   document.getElementById('searchInput').disabled=false;
-  buildGradeDays();window._gradeYearsOpen=null;buildGradeFilters();buildBuscaFilters();
+  buildGradeDays();window._gradeYearsOpen=null;buildGradeFilters();buildBuscaFilters();buildIngestDays();
   fileNameEl.textContent=filename||'arquivo carregado';
   fileNameEl.classList.add('loaded');
   landingDrop.classList.add('loaded');
@@ -588,7 +631,7 @@ function parseWorkbook(data,filename){
 function goHome(){
   if(currentMode){
     currentMode=null;
-    ['ficha','grade','busca'].forEach(function(m){
+    ['ficha','grade','busca','ingest'].forEach(function(m){
       var cap=m.charAt(0).toUpperCase()+m.slice(1);
       document.getElementById('tab'+cap).classList.remove('active');
       document.getElementById('bar'+cap).classList.add('hidden');
@@ -605,13 +648,14 @@ function switchMode(mode){
   currentMode=mode;
   document.getElementById('landing').style.display='none';
   document.getElementById('app').style.display='block';
-  ['ficha','grade','busca'].forEach(function(m){
+  ['ficha','grade','busca','ingest'].forEach(function(m){
     var cap=m.charAt(0).toUpperCase()+m.slice(1);
     document.getElementById('tab'+cap).classList.toggle('active',m===mode);
     document.getElementById('bar'+cap).classList.toggle('hidden',m!==mode);
     document.getElementById(m+'-panel').classList.toggle('active',m===mode);
   });
   if(mode==='grade')renderGrade();
+  if(mode==='ingest')renderIngest();
   if(mode==='busca'){
     var bl=document.getElementById('buscaLoading'),be2=document.getElementById('buscaEmpty'),br=document.getElementById('busca-results');
     bl.style.display='flex';be2.style.display='none';br.style.display='none';
@@ -663,6 +707,81 @@ function renderFicha(nome,s){
 
 /* GRADE */
 function buildGradeDays(){var seen=new Set();days=[];sessoesArr.forEach(function(s){if(!s.date)return;var k=s.date.toISOString().slice(0,10);if(!seen.has(k)){seen.add(k);days.push({key:k,date:s.date});}});days.sort(function(a,b){return a.date-b.date;});currentDay=days.length?days[days.length-1].key:null;}
+
+/* INGEST */
+function buildIngestDays(){
+  var seen=new Set();ingestDays=[];
+  sessoesArr.forEach(function(s){
+    if(!s.date)return;
+    var id=new Date(s.date.getTime());id.setDate(id.getDate()-2);
+    var k=id.toISOString().slice(0,10);
+    if(!seen.has(k)){seen.add(k);ingestDays.push({key:k,date:id});}
+  });
+  ingestDays.sort(function(a,b){return a.date-b.date;});
+  currentIngestDay=ingestDays.length?ingestDays[0].key:null;
+}
+
+function renderIngestDayTabs(){
+  var container=document.getElementById('ingestDayTabs');container.innerHTML='';
+  ingestDays.forEach(function(d){
+    var btn=document.createElement('button');btn.className='day-tab'+(d.key===currentIngestDay?' active':'');
+    btn.textContent=d.date.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});
+    btn.addEventListener('click',function(){currentIngestDay=d.key;renderIngest();});
+    container.appendChild(btn);
+  });
+}
+
+function renderIngest(){
+  renderIngestDayTabs();
+  var ie=document.getElementById('ingestEmpty'),iw=document.getElementById('ingest-container');
+  if(!currentIngestDay){iw.style.display='none';ie.style.display='flex';return;}
+  var sessions=sessoesArr.filter(function(s){
+    if(!s.date)return false;
+    var id=new Date(s.date.getTime());id.setDate(id.getDate()-2);
+    return id.toISOString().slice(0,10)===currentIngestDay;
+  });
+  if(!sessions.length){iw.style.display='none';ie.style.display='flex';ie.querySelector('p').textContent='Nenhuma sessão para ingest neste dia.';return;}
+  ie.style.display='none';iw.style.display='block';
+
+  // total GB for the day
+  var totalGB=0;
+  sessions.forEach(function(s){
+    s.filmes.forEach(function(c){var f=filmesMap[c];if(!f)return;var g=parseFloat((f.gb||'').toString().replace(',','.'));if(!isNaN(g))totalGB+=g;});
+  });
+
+  // group by cinema, preserving order
+  var byCinema={},cinemaOrder=[];
+  sessions.forEach(function(s){
+    if(!byCinema[s.cinema]){byCinema[s.cinema]=[];cinemaOrder.push(s.cinema);}
+    byCinema[s.cinema].push(s);
+  });
+
+  var html='<div class="ingest-total-bar">Total do dia: <strong>'+(totalGB>0?totalGB.toFixed(0)+' GB':'—')+'</strong></div>';
+
+  cinemaOrder.forEach(function(cinema){
+    html+='<div class="ingest-cinema-block"><div class="ingest-cinema-header">'+cinema+'</div>';
+    byCinema[cinema].forEach(function(s){
+      var sessGB=0;
+      s.filmes.forEach(function(c){var f=filmesMap[c];if(!f)return;var g=parseFloat((f.gb||'').toString().replace(',','.'));if(!isNaN(g))sessGB+=g;});
+      html+='<div class="ingest-session"><div class="ingest-session-header"><span class="ingest-sess-name">'+s.nome+'</span><span class="ingest-sess-meta">'+s.dia+' · '+s.hora+'</span>'+(sessGB>0?'<span class="ingest-sess-gb">'+sessGB.toFixed(0)+' GB</span>':'')+'</div>';
+      html+='<div class="ingest-film-list">';
+      s.filmes.forEach(function(c,idx){
+        var f=filmesMap[c]||{};
+        var titulo=clean(f.titulo)||c;
+        var cpl=clean(f.cpl),cplOV=clean(f.cplOV),gb=clean(f.gb),lente=clean(f.lente);
+        html+='<div class="ingest-film-row"><span class="ingest-film-num">'+(idx+1)+'</span><div class="ingest-film-body">';
+        html+='<div class="ingest-film-top"><span class="ingest-film-title">'+titulo+'</span><span class="ingest-film-code">'+c+'</span>'+(lente?lenteBadge(lente):'')+'<span class="ingest-film-gb">'+(gb?gb+' GB':'—')+'</span></div>';
+        html+=(cpl?'<div class="ingest-cpl-line">'+cpl+'</div>':'<div class="ingest-no-cpl">CPL não cadastrada</div>');
+        html+=(cplOV?'<div class="ingest-cplov-line"><span class="ingest-cplov-tag">OV</span>'+cplOV+'</div>':'');
+        html+='</div></div>';
+      });
+      html+='</div></div>';
+    });
+    html+='</div>';
+  });
+
+  iw.innerHTML=html;
+}
 
 function buildPills(container,evColors,activeSet,onToggle){
   container.innerHTML='';if(!Object.keys(evColors).length)return;
