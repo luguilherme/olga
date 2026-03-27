@@ -1175,7 +1175,7 @@ function clearAllBuscaFilters(){
 
 function applyBuscaFilters(f){
   // normal multi-value filters
-  var normMap={evento:'evento',hd:'hd',idioma:'idioma',legenda:'legenda',vf:'vf',lente:'lente',som:'som',kdm:'kdm',status:'status',col_k:'col_k',resolucao:'resolucao',fps:'fps'};
+  var normMap={evento:'evento',hd:'hd',idioma:'idioma',legenda:'legenda',vf:'vf',lente:'lente',som:'som',kdm:'kdm',status:'status',col_k:'col_n',resolucao:'resolucao',fps:'fps'};
   for(var key in normMap){
     if(buscaFilters[key].size===0)continue;
     var val=(f[normMap[key]]||'').toString().trim();
@@ -1209,7 +1209,7 @@ function buildBuscaFilterPanel(){
     {key:'som',label:'Som',field:'som'},
     {key:'kdm',label:'KDM',field:'kdm'},
     {key:'status',label:'Status',field:'status'},
-    {key:'col_k',label:'Stat. Leg.',field:'col_k'},
+    {key:'col_k',label:'Stat. Leg.',field:'col_n'},
     {key:'resolucao',label:'Resolução',field:'resolucao'},
     {key:'fps',label:'FPS',field:'fps'},
   ];
@@ -1217,10 +1217,14 @@ function buildBuscaFilterPanel(){
   var ng=document.getElementById('fpNormalGroups');
   ng.innerHTML='';
   fieldMap.forEach(function(fd){
-    var vals=new Set();
-    filmesArr.forEach(function(f){var v=(f[fd.field]||'').toString().trim();if(v&&v!=='-'&&v!=='0')vals.add(v);});
-    if(!vals.size)return;
-    var sorted=Array.from(vals).sort();
+    var valCount={};
+    filmesArr.forEach(function(f){var v=(f[fd.field]||'').toString().trim();if(v&&v!=='-'&&v!=='0'){valCount[v]=(valCount[v]||0)+1;}});
+    if(!Object.keys(valCount).length)return;
+    var sorted=Object.keys(valCount).sort(function(a,b){return a.localeCompare(b,'pt');});
+    // for idioma, keep only top 20 by frequency
+    if(fd.key==='idioma'){
+      sorted=Object.keys(valCount).sort(function(a,b){return valCount[b]-valCount[a];}).slice(0,20).sort(function(a,b){return a.localeCompare(b,'pt');});
+    }
     var row=document.createElement('div');row.className='fp-group';
     var lbl=document.createElement('span');lbl.className='fp-group-label';lbl.textContent=fd.label;
     var wrap=document.createElement('div');wrap.className='fp-pills';
