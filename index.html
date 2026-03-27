@@ -1,4 +1,4 @@
-﻿
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -225,7 +225,8 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 .ingest-total-bar{font-family:var(--mono);font-size:11px;color:var(--text-dim);background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:10px 16px;margin-bottom:22px;display:flex;align-items:center;gap:10px;}
 .ingest-total-bar strong{color:var(--accent);font-size:15px;margin-left:4px;}
 .ingest-cinema-block{margin-bottom:28px;}
-.ingest-cinema-header{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);padding:8px 14px;}
+.ingest-cinema-header{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);padding:8px 14px;display:flex;align-items:center;justify-content:space-between;}
+.ingest-cinema-gb{font-size:11px;letter-spacing:0;font-weight:400;color:var(--text-dim);border:1px solid var(--border);padding:1px 9px;background:var(--bg);}
 .ingest-session{border:1px solid var(--border);border-top:none;background:var(--surface);}
 .ingest-session+.ingest-session{border-top:1px solid var(--border2);}
 .ingest-session-header{display:flex;align-items:center;gap:12px;padding:8px 14px 7px;border-bottom:1px solid var(--border);flex-wrap:wrap;}
@@ -233,18 +234,48 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 .ingest-sess-meta{font-family:var(--mono);font-size:10px;color:var(--text-dim);}
 .ingest-sess-gb{font-family:var(--mono);font-size:10px;color:var(--text-dim);margin-left:auto;border:1px solid var(--border);padding:1px 8px;white-space:nowrap;}
 .ingest-film-list{padding:2px 0;}
-.ingest-film-row{display:grid;grid-template-columns:20px 1fr;gap:0;padding:7px 14px;border-bottom:1px solid var(--border);}
+.ingest-film-row{display:grid;grid-template-columns:20px 1fr;gap:0;padding:8px 14px;border-bottom:1px solid var(--border);}
 .ingest-film-row:last-child{border-bottom:none;}
-.ingest-film-num{font-family:var(--mono);font-size:10px;color:var(--text-muted);padding-top:2px;}
-.ingest-film-body{display:flex;flex-direction:column;gap:4px;}
+.ingest-film-num{font-family:var(--mono);font-size:10px;color:var(--text-muted);padding-top:3px;}
+.ingest-film-body{display:flex;flex-direction:column;gap:5px;}
 .ingest-film-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
 .ingest-film-title{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--text);}
 .ingest-film-code{font-family:var(--mono);font-size:10px;color:var(--text-muted);}
 .ingest-film-gb{font-family:var(--mono);font-size:10px;color:var(--text-dim);margin-left:auto;white-space:nowrap;}
-.ingest-cpl-line{font-family:var(--mono);font-size:10px;color:var(--cpl-color);word-break:break-all;line-height:1.45;}
-.ingest-cplov-line{font-family:var(--mono);font-size:10px;color:rgba(93,220,138,0.45);word-break:break-all;line-height:1.45;display:flex;gap:5px;}
-.ingest-cplov-tag{font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(93,220,138,0.35);flex-shrink:0;padding-top:1px;}
+.ingest-film-specs{display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.ingest-spec-sep{color:var(--border2);font-size:10px;}
+.ingest-spec-res{font-family:var(--mono);font-size:9px;color:var(--text-dim);border:1px solid var(--border);padding:1px 5px;border-radius:2px;}
+.ingest-cpl-block{display:flex;flex-direction:column;gap:3px;padding:5px 8px;background:rgba(61,186,110,0.07);border-left:2px solid var(--cpl-border);}
+.ingest-cpl-label{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;color:rgba(93,220,138,0.45);margin-bottom:1px;}
+.ingest-cpl-line{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--cpl-color);word-break:break-all;line-height:1.5;}
+.ingest-cplov-line{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--cpl-color);word-break:break-all;line-height:1.5;display:flex;gap:6px;align-items:baseline;}
+.ingest-cplov-tag{font-size:8px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(93,220,138,0.5);flex-shrink:0;border:1px solid rgba(93,220,138,0.25);padding:0px 4px;border-radius:2px;}
 .ingest-no-cpl{font-family:var(--mono);font-size:10px;color:var(--text-muted);font-style:italic;}
+/* INGEST PRINT */
+@media print{
+  #ingest-container{padding:0;}
+  .ingest-total-bar{background:#e8e8e8!important;border-left-color:#000!important;color:#000!important;}
+  .ingest-total-bar strong{color:#000!important;}
+  .ingest-cinema-header{background:#d8d8d8!important;border-left-color:#000!important;color:#000!important;}
+  .ingest-cinema-gb{color:#333!important;border-color:#aaa!important;background:none!important;}
+  .ingest-session{background:white!important;border-color:#ccc!important;}
+  .ingest-session-header{border-bottom-color:#ccc!important;}
+  .ingest-sess-name{color:#000!important;}
+  .ingest-sess-meta{color:#444!important;}
+  .ingest-sess-gb{color:#333!important;border-color:#aaa!important;}
+  .ingest-film-title{color:#000!important;}
+  .ingest-film-code{color:#555!important;}
+  .ingest-film-gb{color:#333!important;}
+  .ingest-cpl-block{background:#e8e8e8!important;border-left-color:#555!important;}
+  .ingest-cpl-line,.ingest-cplov-line{color:#000!important;font-size:9px;}
+  .ingest-cplov-tag{color:#555!important;border-color:#aaa!important;}
+  .ingest-no-cpl{color:#888!important;}
+  .ingest-spec-res{color:#333!important;border-color:#aaa!important;}
+  .badge{border-color:#555!important;color:#222!important;background:none!important;}
+  .ingest-film-num{color:#888!important;}
+  .ingest-cinema-block{margin-bottom:16px!important;page-break-inside:avoid;}
+  .ingest-film-row{padding:5px 14px!important;}
+}
 /* expand */
 .card-titulo-wrap{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
 .card-titulo-wrap:hover .card-titulo{color:var(--accent);}
@@ -334,9 +365,12 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
   #main-content{zoom:1!important;}
   @page{margin:14mm 11mm;size:A4 landscape;}
   body{background:white;color:black;}
-  header,.mode-bar,#landing,#grade-panel,#busca-panel{display:none!important;}
+  header,.mode-bar,#landing{display:none!important;}
   #app{display:block!important;}
-  #ficha-panel{display:block!important;}
+  /* show only the active panel */
+  .mode-panel{display:none!important;}
+  .mode-panel.active{display:block!important;}
+  /* FICHA */
   #ficha-container{padding:0;}
   .ficha{max-width:none;background:white;border:1px solid #bbb;}
   .ficha-header{padding:0 0 12px;border-bottom:2px solid black;}
@@ -371,6 +405,29 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
   .footer-total strong{color:black!important;}
   .footer-stamp{color:#666!important;}
   .empty-state{display:none!important;}
+  /* INGEST */
+  #ingest-container{padding:0;}
+  .ingest-total-bar{background:#e8e8e8!important;border-left-color:#000!important;color:#000!important;}
+  .ingest-total-bar strong{color:#000!important;}
+  .ingest-cinema-header{background:#d8d8d8!important;border-left-color:#000!important;color:#000!important;}
+  .ingest-cinema-gb{color:#333!important;border-color:#aaa!important;background:none!important;}
+  .ingest-session{background:white!important;border-color:#ccc!important;}
+  .ingest-session-header{border-bottom-color:#ccc!important;}
+  .ingest-sess-name{color:#000!important;}
+  .ingest-sess-meta{color:#444!important;}
+  .ingest-sess-gb{color:#333!important;border-color:#aaa!important;}
+  .ingest-film-title{color:#000!important;}
+  .ingest-film-code{color:#555!important;}
+  .ingest-film-gb{color:#333!important;}
+  .ingest-cpl-block{background:#efefef!important;border-left-color:#555!important;}
+  .ingest-cpl-line,.ingest-cplov-line{color:#000!important;font-size:9px;}
+  .ingest-cpl-label{color:#555!important;}
+  .ingest-cplov-tag{color:#555!important;border-color:#aaa!important;}
+  .ingest-no-cpl{color:#888!important;}
+  .ingest-spec-res{color:#333!important;border-color:#aaa!important;}
+  .ingest-film-num{color:#888!important;}
+  .ingest-cinema-block{margin-bottom:16px!important;page-break-inside:avoid;}
+  .ingest-film-row{padding:5px 14px!important;}
 }
 </style>
 </head>
@@ -420,6 +477,8 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 </div>
 <div class="mode-bar hidden" id="barIngest">
   <div class="day-tabs" id="ingestDayTabs"></div>
+  <select id="ingestCinemaSelect" style="min-width:180px;margin-left:8px;" onchange="ingestCinemaFilter=this.value;renderIngest();"><option value="">Todos os cinemas</option></select>
+  <button class="print-btn" onclick="printIngest()" style="margin-left:4px;">⎙ Imprimir</button>
 </div>
 
 <div id="landing">
@@ -550,7 +609,7 @@ var buscaReverseSessoes={},eventColors={};
 var activeEventsGrade=new Set(),activeEventsBusca=new Set();
 var days=[],currentDay=null,buscaQuery='',dataLoaded=false,currentMode=null;
 var filteredFilmes=[];
-var ingestDays=[],currentIngestDay=null;
+var ingestDays=[],currentIngestDay=null,ingestCinemaFilter='';
 var PALETTE=[{bg:'#e8a020',text:'#000'},{bg:'#3dba6e',text:'#000'},{bg:'#4a9eff',text:'#000'},{bg:'#c87aff',text:'#000'},{bg:'#ff6b6b',text:'#000'},{bg:'#ffd93d',text:'#000'},{bg:'#6bcfcf',text:'#000'},{bg:'#ff9f43',text:'#000'}];
 
 var fileInput=document.getElementById('fileInput');
@@ -718,16 +777,53 @@ function buildIngestDays(){
     if(!seen.has(k)){seen.add(k);ingestDays.push({key:k,date:id});}
   });
   ingestDays.sort(function(a,b){return a.date-b.date;});
-  currentIngestDay=ingestDays.length?ingestDays[0].key:null;
+  // default: newest day
+  currentIngestDay=ingestDays.length?ingestDays[ingestDays.length-1].key:null;
+  // populate cinema dropdown
+  var cinemaSet=new Set();
+  sessoesArr.forEach(function(s){if(s.cinema)cinemaSet.add(s.cinema);});
+  var sel=document.getElementById('ingestCinemaSelect');
+  sel.innerHTML='<option value="">Todos os cinemas</option>';
+  Array.from(cinemaSet).sort().forEach(function(c){
+    var o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);
+  });
+  ingestCinemaFilter='';
+  window._ingestYearsOpen=null;
 }
 
 function renderIngestDayTabs(){
   var container=document.getElementById('ingestDayTabs');container.innerHTML='';
+  var byYear={},yearOrder=[];
   ingestDays.forEach(function(d){
-    var btn=document.createElement('button');btn.className='day-tab'+(d.key===currentIngestDay?' active':'');
-    btn.textContent=d.date.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});
-    btn.addEventListener('click',function(){currentIngestDay=d.key;renderIngest();});
-    container.appendChild(btn);
+    var y=d.date.getFullYear();
+    if(!byYear[y]){byYear[y]=[];yearOrder.push(y);}
+    byYear[y].push(d);
+  });
+  if(!window._ingestYearsOpen){
+    window._ingestYearsOpen=new Set();
+    // auto-open year of the newest selected day, collapsed by default
+    if(currentIngestDay) window._ingestYearsOpen.add(new Date(currentIngestDay+'T00:00:00').getFullYear());
+    else if(yearOrder.length) window._ingestYearsOpen.add(yearOrder[yearOrder.length-1]);
+  }
+  yearOrder.forEach(function(y){
+    var isOpen=window._ingestYearsOpen.has(y);
+    var yBtn=document.createElement('button');
+    yBtn.className='year-tab'+(isOpen?' open':'');
+    yBtn.innerHTML=String(y)+'<span class="year-arrow">'+(isOpen?'▾':'▸')+'</span>';
+    yBtn.addEventListener('click',function(){
+      if(window._ingestYearsOpen.has(y)) window._ingestYearsOpen.delete(y);
+      else window._ingestYearsOpen.add(y);
+      renderIngestDayTabs();
+    });
+    container.appendChild(yBtn);
+    if(isOpen){
+      byYear[y].forEach(function(d){
+        var btn=document.createElement('button');btn.className='day-tab'+(d.key===currentIngestDay?' active':'');
+        btn.textContent=d.date.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});
+        btn.addEventListener('click',function(){currentIngestDay=d.key;renderIngest();});
+        container.appendChild(btn);
+      });
+    }
   });
 }
 
@@ -738,28 +834,39 @@ function renderIngest(){
   var sessions=sessoesArr.filter(function(s){
     if(!s.date)return false;
     var id=new Date(s.date.getTime());id.setDate(id.getDate()-2);
-    return id.toISOString().slice(0,10)===currentIngestDay;
+    if(id.toISOString().slice(0,10)!==currentIngestDay)return false;
+    if(ingestCinemaFilter&&s.cinema!==ingestCinemaFilter)return false;
+    return true;
   });
   if(!sessions.length){iw.style.display='none';ie.style.display='flex';ie.querySelector('p').textContent='Nenhuma sessão para ingest neste dia.';return;}
   ie.style.display='none';iw.style.display='block';
 
-  // total GB for the day
+  // total GB for the day (all cinemas, regardless of filter)
   var totalGB=0;
-  sessions.forEach(function(s){
+  sessoesArr.forEach(function(s){
+    if(!s.date)return;
+    var id=new Date(s.date.getTime());id.setDate(id.getDate()-2);
+    if(id.toISOString().slice(0,10)!==currentIngestDay)return;
     s.filmes.forEach(function(c){var f=filmesMap[c];if(!f)return;var g=parseFloat((f.gb||'').toString().replace(',','.'));if(!isNaN(g))totalGB+=g;});
   });
 
-  // group by cinema, preserving order
+  // group by cinema
   var byCinema={},cinemaOrder=[];
   sessions.forEach(function(s){
     if(!byCinema[s.cinema]){byCinema[s.cinema]=[];cinemaOrder.push(s.cinema);}
     byCinema[s.cinema].push(s);
   });
 
-  var html='<div class="ingest-total-bar">Total do dia: <strong>'+(totalGB>0?totalGB.toFixed(0)+' GB':'—')+'</strong></div>';
+  var html='<div class="ingest-total-bar">Total do dia'+(ingestCinemaFilter?' (todos os cinemas)':'')+': <strong>'+(totalGB>0?totalGB.toFixed(0)+' GB':'—')+'</strong></div>';
 
   cinemaOrder.forEach(function(cinema){
-    html+='<div class="ingest-cinema-block"><div class="ingest-cinema-header">'+cinema+'</div>';
+    // cinema-level GB total
+    var cinemaGB=0;
+    byCinema[cinema].forEach(function(s){
+      s.filmes.forEach(function(c){var f=filmesMap[c];if(!f)return;var g=parseFloat((f.gb||'').toString().replace(',','.'));if(!isNaN(g))cinemaGB+=g;});
+    });
+    html+='<div class="ingest-cinema-block"><div class="ingest-cinema-header"><span>'+cinema+'</span>'+(cinemaGB>0?'<span class="ingest-cinema-gb">'+cinemaGB.toFixed(0)+' GB</span>':'')+'</div>';
+
     byCinema[cinema].forEach(function(s){
       var sessGB=0;
       s.filmes.forEach(function(c){var f=filmesMap[c];if(!f)return;var g=parseFloat((f.gb||'').toString().replace(',','.'));if(!isNaN(g))sessGB+=g;});
@@ -768,11 +875,27 @@ function renderIngest(){
       s.filmes.forEach(function(c,idx){
         var f=filmesMap[c]||{};
         var titulo=clean(f.titulo)||c;
-        var cpl=clean(f.cpl),cplOV=clean(f.cplOV),gb=clean(f.gb),lente=clean(f.lente);
+        var cpl=clean(f.cpl),cplOV=clean(f.cplOV),gb=clean(f.gb);
+        var lente=clean(f.lente),som=clean(f.som),hd=clean(f.hd),res=clean(f.resolucao);
         html+='<div class="ingest-film-row"><span class="ingest-film-num">'+(idx+1)+'</span><div class="ingest-film-body">';
-        html+='<div class="ingest-film-top"><span class="ingest-film-title">'+titulo+'</span><span class="ingest-film-code">'+c+'</span>'+(lente?lenteBadge(lente):'')+'<span class="ingest-film-gb">'+(gb?gb+' GB':'—')+'</span></div>';
-        html+=(cpl?'<div class="ingest-cpl-line">'+cpl+'</div>':'<div class="ingest-no-cpl">CPL não cadastrada</div>');
-        html+=(cplOV?'<div class="ingest-cplov-line"><span class="ingest-cplov-tag">OV</span>'+cplOV+'</div>':'');
+        // top row: title + code + badges + GB
+        html+='<div class="ingest-film-top"><span class="ingest-film-title">'+titulo+'</span><span class="ingest-film-code">'+c+'</span>'+(gb?'<span class="ingest-film-gb">'+gb+' GB</span>':'')+'</div>';
+        // specs row: HD · lente · som · res
+        var specs=[];
+        if(hd)specs.push('<span class="film-hd">'+hd+'</span>');
+        if(lente)specs.push(lenteBadge(lente));
+        if(som)specs.push(somBadge(som));
+        if(res)specs.push('<span class="ingest-spec-res">'+res+'</span>');
+        if(specs.length)html+='<div class="ingest-film-specs">'+specs.join('<span class="ingest-spec-sep"> · </span>')+'</div>';
+        // CPL block
+        if(cpl||cplOV){
+          html+='<div class="ingest-cpl-block">';
+          if(cpl)html+='<div><span class="ingest-cpl-label">CPL</span><div class="ingest-cpl-line">'+cpl+'</div></div>';
+          if(cplOV)html+='<div style="margin-top:'+(cpl?'6px':'0')+'"><span class="ingest-cpl-label">CPL · OV</span><div class="ingest-cplov-line">'+cplOV+'</div></div>';
+          html+='</div>';
+        }else{
+          html+='<div class="ingest-no-cpl">CPL não cadastrada</div>';
+        }
         html+='</div></div>';
       });
       html+='</div></div>';
@@ -782,6 +905,8 @@ function renderIngest(){
 
   iw.innerHTML=html;
 }
+
+function printIngest(){window.print();}
 
 function buildPills(container,evColors,activeSet,onToggle){
   container.innerHTML='';if(!Object.keys(evColors).length)return;
