@@ -220,6 +220,35 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 .sessions-label{font-family:var(--mono);font-size:8px;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);}
 .no-results{padding:60px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--text-muted);}
 
+/* FILTROS AVANÇADOS BUSCA */
+#filterPanel{display:none;background:var(--surface);border-bottom:2px solid var(--border);padding:14px 24px 18px;gap:0;flex-direction:column;}
+#filterPanel.open{display:flex;}
+.fp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.fp-title{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-muted);}
+.fp-clear{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:3px 11px;border:1px solid rgba(232,80,32,0.35);background:transparent;color:#ff8060;cursor:pointer;transition:background 0.12s;display:none;}
+.fp-clear:hover{background:rgba(232,80,32,0.1);}
+.fp-clear.visible{display:inline-block;}
+.fp-sections{display:flex;gap:0;flex-wrap:wrap;}
+.fp-section{flex:1;min-width:260px;padding-right:28px;margin-right:28px;border-right:1px solid var(--border);}
+.fp-section:last-child{border-right:none;padding-right:0;margin-right:0;}
+.fp-section-title{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+.fp-groups{display:flex;flex-direction:column;gap:8px;}
+.fp-group{display:flex;align-items:flex-start;gap:8px;}
+.fp-group-label{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);min-width:88px;padding-top:3px;flex-shrink:0;}
+.fp-pills{display:flex;flex-wrap:wrap;gap:3px;}
+.fpill{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.04em;padding:2px 8px;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;border-radius:2px;transition:all 0.1s;white-space:nowrap;}
+.fpill:hover{border-color:var(--text-dim);color:var(--text);}
+.fpill.active{background:var(--accent);border-color:var(--accent);color:#000;}
+.bpill{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.06em;padding:2px 9px;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;border-radius:2px;transition:all 0.1s;white-space:nowrap;}
+.bpill:hover{border-color:var(--text-dim);color:var(--text);}
+.bpill.active-yes{background:rgba(61,186,110,0.16);border-color:rgba(61,186,110,0.45);color:#5ddc8a;}
+.bpill.active-no{background:rgba(232,80,32,0.12);border-color:rgba(232,80,32,0.35);color:#ff8060;}
+.filter-toggle-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;background:transparent;color:var(--text-dim);border:1px solid var(--border);font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.filter-toggle-btn:hover{border-color:var(--text-dim);color:var(--text);}
+.filter-toggle-btn.active{border-color:var(--accent);color:var(--accent);}
+.filter-badge{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;background:var(--accent);color:#000;font-size:9px;font-weight:700;border-radius:8px;padding:0 4px;display:none;}
+.filter-badge.visible{display:inline-flex;}
+
 /* INGEST */
 #ingest-container{padding:24px 32px 48px;max-width:1100px;margin:0 auto;}
 .ingest-total-bar{font-family:var(--mono);font-size:11px;color:var(--text-dim);background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);padding:10px 16px;margin-bottom:22px;display:flex;align-items:center;gap:10px;}
@@ -472,12 +501,30 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
     <input type="text" id="searchInput" placeholder="título, código, CPL, idioma…" disabled>
     <button class="search-clear" id="searchClear">×</button>
   </div>
+  <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterPanel()">⊞ Filtros <span class="filter-badge" id="filterBadge"></span></button>
   <div class="event-filters" id="buscaEventFilters"></div>
   <span class="result-count" id="resultCount"></span>
+</div>
+<div id="filterPanel">
+  <div class="fp-header">
+    <span class="fp-title">Filtros avançados</span>
+    <button class="fp-clear" id="fpClearBtn" onclick="clearAllBuscaFilters()">✕ Limpar todos</button>
+  </div>
+  <div class="fp-sections">
+    <div class="fp-section">
+      <div class="fp-section-title">Por valor</div>
+      <div class="fp-groups" id="fpNormalGroups"></div>
+    </div>
+    <div class="fp-section">
+      <div class="fp-section-title">Preenchimento</div>
+      <div class="fp-groups" id="fpBinaryGroups"></div>
+    </div>
+  </div>
 </div>
 <div class="mode-bar hidden" id="barIngest">
   <div class="day-tabs" id="ingestDayTabs"></div>
   <select id="ingestCinemaSelect" style="min-width:180px;margin-left:8px;" onchange="ingestCinemaFilter=this.value;renderIngest();"><option value="">Todos os cinemas</option></select>
+  <div class="event-filters" id="ingestEventFilters" style="margin-left:4px;"></div>
   <button class="print-btn" onclick="printIngest()" style="margin-left:4px;">⎙ Imprimir</button>
 </div>
 
@@ -606,10 +653,16 @@ self.onmessage=function(e){
 <script>
 var filmesMap={},filmesArr=[],sessoesArr=[],sessoesMap={};
 var buscaReverseSessoes={},eventColors={};
-var activeEventsGrade=new Set(),activeEventsBusca=new Set();
+var activeEventsGrade=new Set(),activeEventsBusca=new Set(),activeEventsIngest=new Set();
 var days=[],currentDay=null,buscaQuery='',dataLoaded=false,currentMode=null;
 var filteredFilmes=[];
 var ingestDays=[],currentIngestDay=null,ingestCinemaFilter='';
+var buscaFilters={
+  evento:new Set(),hd:new Set(),idioma:new Set(),legenda:new Set(),vf:new Set(),
+  lente:new Set(),som:new Set(),kdm:new Set(),status:new Set(),col_k:new Set(),
+  resolucao:new Set(),fps:new Set(),
+  titulo_bin:null,obs_bin:null,cpl_bin:null,cplOV_bin:null,col_n_bin:null,legenda_bin:null
+};
 var PALETTE=[{bg:'#e8a020',text:'#000'},{bg:'#3dba6e',text:'#000'},{bg:'#4a9eff',text:'#000'},{bg:'#c87aff',text:'#000'},{bg:'#ff6b6b',text:'#000'},{bg:'#ffd93d',text:'#000'},{bg:'#6bcfcf',text:'#000'},{bg:'#ff9f43',text:'#000'}];
 
 var fileInput=document.getElementById('fileInput');
@@ -640,7 +693,7 @@ function applyParsedData(d,filename){
   buscaReverseSessoes=d.buscaReverseSessoes;
   var events=d.events;
   eventColors={};events.forEach(function(ev,i){eventColors[ev]=PALETTE[i%PALETTE.length];});
-  activeEventsGrade=new Set(events);activeEventsBusca=new Set(events);
+  activeEventsGrade=new Set(events);activeEventsBusca=new Set(events);activeEventsIngest=new Set(events);
   dataLoaded=true;
   ['tabFicha','tabGrade','tabBusca','tabIngest'].forEach(function(id){document.getElementById(id).disabled=false;});
   ['modCardFicha','modCardGrade','modCardBusca','modCardIngest'].forEach(function(id){document.getElementById(id).classList.remove('disabled');});
@@ -648,7 +701,7 @@ function applyParsedData(d,filename){
   sessoesArr.forEach(function(s){var opt=document.createElement('option');opt.value=s.nome;opt.textContent=s.nome;sel.appendChild(opt);});
   sel.disabled=false;
   document.getElementById('searchInput').disabled=false;
-  buildGradeDays();window._gradeYearsOpen=null;buildGradeFilters();buildBuscaFilters();buildIngestDays();
+  buildGradeDays();window._gradeYearsOpen=null;buildGradeFilters();buildBuscaFilters();buildIngestDays();buildIngestFilters();buildBuscaFilterPanel();
   fileNameEl.textContent=filename||'arquivo carregado';
   fileNameEl.classList.add('loaded');
   landingDrop.classList.add('loaded');
@@ -789,7 +842,10 @@ function buildIngestDays(){
   });
   ingestCinemaFilter='';
   window._ingestYearsOpen=null;
+  buildIngestFilters();
 }
+
+function buildIngestFilters(){buildPills(document.getElementById('ingestEventFilters'),eventColors,activeEventsIngest,renderIngest);}
 
 function renderIngestDayTabs(){
   var container=document.getElementById('ingestDayTabs');container.innerHTML='';
@@ -836,6 +892,7 @@ function renderIngest(){
     var id=new Date(s.date.getTime());id.setDate(id.getDate()-2);
     if(id.toISOString().slice(0,10)!==currentIngestDay)return false;
     if(ingestCinemaFilter&&s.cinema!==ingestCinemaFilter)return false;
+    if(s.evento&&!activeEventsIngest.has(s.evento))return false;
     return true;
   });
   if(!sessions.length){iw.style.display='none';ie.style.display='flex';ie.querySelector('p').textContent='Nenhuma sessão para ingest neste dia.';return;}
@@ -919,6 +976,7 @@ function buildPills(container,evColors,activeSet,onToggle){
 }
 function buildGradeFilters(){buildPills(document.getElementById('gradeEventFilters'),eventColors,activeEventsGrade,renderGrade);}
 function buildBuscaFilters(){buildPills(document.getElementById('buscaEventFilters'),eventColors,activeEventsBusca,renderBuscaResults);}
+function buildIngestFilters(){buildPills(document.getElementById('ingestEventFilters'),eventColors,activeEventsIngest,renderIngest);}
 
 function renderDayTabs(){
   var container=document.getElementById('dayTabs');container.innerHTML='';
@@ -1076,13 +1134,154 @@ function toggleExpand(idx){
 
 function efv(v){return(!v||v==='-'||v==='0')?'—':v;}// expand field value
 
+/* FILTROS AVANÇADOS */
+var _fpOpen=false;
+function toggleFilterPanel(){
+  _fpOpen=!_fpOpen;
+  var fp=document.getElementById('filterPanel');
+  var btn=document.getElementById('filterToggleBtn');
+  fp.classList.toggle('open',_fpOpen);
+  btn.classList.toggle('active',_fpOpen);
+}
+
+function countActiveFilters(){
+  var n=0;
+  var normKeys=['evento','hd','idioma','legenda','vf','lente','som','kdm','status','col_k','resolucao','fps'];
+  normKeys.forEach(function(k){if(buscaFilters[k].size>0)n++;});
+  var binKeys=['titulo_bin','obs_bin','cpl_bin','cplOV_bin','col_n_bin','legenda_bin'];
+  binKeys.forEach(function(k){if(buscaFilters[k]!==null)n++;});
+  return n;
+}
+
+function updateFilterBadge(){
+  var n=countActiveFilters();
+  var badge=document.getElementById('filterBadge');
+  var clearBtn=document.getElementById('fpClearBtn');
+  badge.textContent=n;
+  badge.classList.toggle('visible',n>0);
+  clearBtn.classList.toggle('visible',n>0);
+}
+
+function clearAllBuscaFilters(){
+  var normKeys=['evento','hd','idioma','legenda','vf','lente','som','kdm','status','col_k','resolucao','fps'];
+  normKeys.forEach(function(k){buscaFilters[k].clear();});
+  ['titulo_bin','obs_bin','cpl_bin','cplOV_bin','col_n_bin','legenda_bin'].forEach(function(k){buscaFilters[k]=null;});
+  // reset pill visuals
+  document.querySelectorAll('#fpNormalGroups .fpill').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('#fpBinaryGroups .bpill').forEach(function(p){p.classList.remove('active-yes','active-no');});
+  updateFilterBadge();
+  renderBuscaResults();
+}
+
+function applyBuscaFilters(f){
+  // normal multi-value filters
+  var normMap={evento:'evento',hd:'hd',idioma:'idioma',legenda:'legenda',vf:'vf',lente:'lente',som:'som',kdm:'kdm',status:'status',col_k:'col_k',resolucao:'resolucao',fps:'fps'};
+  for(var key in normMap){
+    if(buscaFilters[key].size===0)continue;
+    var val=(f[normMap[key]]||'').toString().trim();
+    if(!buscaFilters[key].has(val))return false;
+  }
+  // binary filters
+  var binMap={titulo_bin:'titulo',obs_bin:'obs',cpl_bin:'cpl',cplOV_bin:'cplOV',col_n_bin:'col_n',legenda_bin:'legenda'};
+  for(var bk in binMap){
+    var state=buscaFilters[bk];
+    if(state===null)continue;
+    var bval=clean(f[binMap[bk]]);
+    if(state==='sim'&&!bval)return false;
+    if(state==='nao'&&bval)return false;
+  }
+  return true;
+}
+
+function buildBuscaFilterPanel(){
+  // reset filter state
+  var normKeys=['evento','hd','idioma','legenda','vf','lente','som','kdm','status','col_k','resolucao','fps'];
+  normKeys.forEach(function(k){buscaFilters[k].clear();});
+  ['titulo_bin','obs_bin','cpl_bin','cplOV_bin','col_n_bin','legenda_bin'].forEach(function(k){buscaFilters[k]=null;});
+
+  var fieldMap=[
+    {key:'evento',label:'Evento',field:'evento'},
+    {key:'hd',label:'HD',field:'hd'},
+    {key:'idioma',label:'Idioma',field:'idioma'},
+    {key:'legenda',label:'Leg DCP',field:'legenda'},
+    {key:'vf',label:'VF',field:'vf'},
+    {key:'lente',label:'Lente',field:'lente'},
+    {key:'som',label:'Som',field:'som'},
+    {key:'kdm',label:'KDM',field:'kdm'},
+    {key:'status',label:'Status',field:'status'},
+    {key:'col_k',label:'Stat. Leg.',field:'col_k'},
+    {key:'resolucao',label:'Resolução',field:'resolucao'},
+    {key:'fps',label:'FPS',field:'fps'},
+  ];
+
+  var ng=document.getElementById('fpNormalGroups');
+  ng.innerHTML='';
+  fieldMap.forEach(function(fd){
+    var vals=new Set();
+    filmesArr.forEach(function(f){var v=(f[fd.field]||'').toString().trim();if(v&&v!=='-'&&v!=='0')vals.add(v);});
+    if(!vals.size)return;
+    var sorted=Array.from(vals).sort();
+    var row=document.createElement('div');row.className='fp-group';
+    var lbl=document.createElement('span');lbl.className='fp-group-label';lbl.textContent=fd.label;
+    var wrap=document.createElement('div');wrap.className='fp-pills';
+    sorted.forEach(function(v){
+      var p=document.createElement('button');p.className='fpill';p.textContent=v;
+      p.addEventListener('click',function(){
+        if(buscaFilters[fd.key].has(v)){buscaFilters[fd.key].delete(v);p.classList.remove('active');}
+        else{buscaFilters[fd.key].add(v);p.classList.add('active');}
+        updateFilterBadge();renderBuscaResults();
+      });
+      wrap.appendChild(p);
+    });
+    row.appendChild(lbl);row.appendChild(wrap);ng.appendChild(row);
+  });
+
+  var binFields=[
+    {key:'titulo_bin',label:'Título'},
+    {key:'obs_bin',label:'Observações'},
+    {key:'cpl_bin',label:'CPL'},
+    {key:'cplOV_bin',label:'CPL OV'},
+    {key:'col_n_bin',label:'Link DCP'},
+    {key:'legenda_bin',label:'Leg / Trans.'},
+  ];
+  var bg=document.getElementById('fpBinaryGroups');
+  bg.innerHTML='';
+  binFields.forEach(function(fd){
+    var row=document.createElement('div');row.className='fp-group';
+    var lbl=document.createElement('span');lbl.className='fp-group-label';lbl.textContent=fd.label;
+    var wrap=document.createElement('div');wrap.className='fp-pills';
+    function mkBpill(label,state,cls){
+      var p=document.createElement('button');p.className='bpill';p.textContent=label;
+      p.addEventListener('click',function(){
+        if(buscaFilters[fd.key]===state){buscaFilters[fd.key]=null;p.classList.remove(cls);}
+        else{
+          // deactivate sibling
+          wrap.querySelectorAll('.bpill').forEach(function(s){s.classList.remove('active-yes','active-no');});
+          buscaFilters[fd.key]=state;p.classList.add(cls);
+        }
+        updateFilterBadge();renderBuscaResults();
+      });
+      return p;
+    }
+    wrap.appendChild(mkBpill('✓ preenchido','sim','active-yes'));
+    wrap.appendChild(mkBpill('— vazio','nao','active-no'));
+    row.appendChild(lbl);row.appendChild(wrap);bg.appendChild(row);
+  });
+  updateFilterBadge();
+}
+
 function renderBuscaResults(){
   var re=document.getElementById('busca-results'),be=document.getElementById('buscaEmpty');
   document.getElementById('buscaLoading').style.display='none';
   var q=buscaQuery.toLowerCase();
-  var filtered=filmesArr.filter(function(f){if(f.evento&&!activeEventsBusca.has(f.evento))return false;if(!q)return true;return f.titulo.toLowerCase().includes(q)||f.codigo.toLowerCase().includes(q)||f.cpl.toLowerCase().includes(q)||f.idioma.toLowerCase().includes(q)||f.obs.toLowerCase().includes(q)||f.status.toLowerCase().includes(q)||f.cplOV.toLowerCase().includes(q);});
+  var filtered=filmesArr.filter(function(f){
+    if(f.evento&&!activeEventsBusca.has(f.evento))return false;
+    if(!applyBuscaFilters(f))return false;
+    if(!q)return true;
+    return f.titulo.toLowerCase().includes(q)||f.codigo.toLowerCase().includes(q)||f.cpl.toLowerCase().includes(q)||f.idioma.toLowerCase().includes(q)||f.obs.toLowerCase().includes(q)||f.status.toLowerCase().includes(q)||f.cplOV.toLowerCase().includes(q);
+  });
   document.getElementById('resultCount').textContent=filtered.length+' filme'+(filtered.length!==1?'s':'');
-  if(!filtered.length){re.style.display='none';be.style.display='flex';be.querySelector('p').textContent=q?'Nenhum resultado para "'+buscaQuery+'"':'Digite para buscar filmes.';return;}
+  if(!filtered.length){re.style.display='none';be.style.display='flex';var hasFilters=countActiveFilters()>0;be.querySelector('p').textContent=q?'Nenhum resultado para "'+buscaQuery+'"':(hasFilters?'Nenhum resultado para os filtros ativos.':'Digite para buscar filmes.');return;}
   be.style.display='none';re.style.display='grid';
   filteredFilmes=filtered;
 
