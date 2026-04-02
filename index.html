@@ -24,6 +24,9 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 header{position:sticky;top:0;z-index:200;background:rgba(10,10,10,0.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:stretch;height:52px;}
 .logo{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.22em;color:var(--accent);text-transform:uppercase;display:flex;align-items:center;padding-right:18px;border-right:1px solid var(--border);white-space:nowrap;flex-shrink:0;background:none;border-top:none;border-bottom:none;border-left:none;cursor:pointer;transition:color 0.15s;}
 .logo:hover{color:#ffbe50;}
+.back-btn{display:none;align-items:center;gap:6px;padding:0 16px;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);background:none;border:none;border-left:1px solid var(--border);border-right:1px solid var(--border);cursor:pointer;height:100%;transition:color 0.15s;white-space:nowrap;flex-shrink:0;}
+.back-btn:hover{color:var(--accent);}
+.back-btn.visible{display:inline-flex;}
 .file-zone{display:flex;align-items:center;gap:10px;padding:0 18px;border-right:1px solid var(--border);flex-shrink:0;}
 .upload-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:var(--accent);color:#000;font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;border:none;cursor:pointer;transition:opacity 0.15s;white-space:nowrap;}
 .upload-btn:hover{opacity:0.82;}
@@ -191,6 +194,32 @@ td.cpl-cell{background:var(--cpl-bg);border-left:3px solid var(--cpl-border);pad
 .tt-film{font-family:var(--mono);font-size:9px;color:var(--text-dim);line-height:1.7;}
 .tt-film span{color:#c8c8c8;}
 
+/* GRADE PRINT TABLE */
+.gpt-table{border-collapse:collapse;width:100%;font-size:11px;}
+.gpt-table th{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:rgba(232,160,32,0.1);color:var(--accent);padding:7px 10px;border:1px solid var(--border);text-align:left;white-space:nowrap;}
+.gpt-table td{font-family:var(--sans);font-size:11px;padding:6px 10px;border:1px solid var(--border);vertical-align:top;min-width:120px;}
+.gpt-table td.slot-label{font-family:var(--mono);font-size:10px;color:var(--text-muted);background:var(--surface2);white-space:nowrap;text-align:center;font-weight:600;min-width:52px;}
+.gpt-table td.empty{background:var(--surface);opacity:0.4;}
+.gpt-sess-entry{padding:3px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s;border-radius:2px;}
+.gpt-sess-entry:hover{background:var(--accent-dim);}
+.gpt-sess-entry:hover .gpt-sess-name{color:var(--accent);}
+.gpt-sess-entry:last-child{border-bottom:none;padding-bottom:0;}
+.gpt-sess-time{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--accent);margin-bottom:1px;}
+.gpt-sess-name{font-family:var(--sans);font-size:11px;font-weight:600;color:var(--text);line-height:1.3;}
+.gpt-sess-films{font-family:var(--mono);font-size:9px;color:var(--text-muted);margin-top:1px;}
+/* Grade table print mode */
+@media print{body.print-grade-table>*{display:none!important;}body.print-grade-table #gradePrintArea{display:block!important;}}
+#gradePrintArea{padding:14mm 11mm;}
+#gradePrintArea .gpt-table{border-collapse:collapse;width:100%;}
+#gradePrintArea .gpt-table th{font-family:monospace;font-size:8px;font-weight:700;background:#e8e8e8;color:#000;padding:5px 8px;border:1px solid #aaa;}
+#gradePrintArea .gpt-table td{font-size:10px;padding:5px 8px;border:1px solid #ccc;vertical-align:top;min-width:80px;}
+#gradePrintArea .gpt-table td.slot-label{font-family:monospace;font-size:9px;font-weight:700;background:#f0f0f0;color:#333;text-align:center;}
+#gradePrintArea .gpt-table td.empty{background:#fafafa;}
+#gradePrintArea .gpt-sess-time{font-family:monospace;font-size:8px;font-weight:700;color:#444;}
+#gradePrintArea .gpt-sess-name{font-family:sans-serif;font-size:10px;font-weight:600;color:#000;}
+#gradePrintArea .gpt-sess-films{font-family:monospace;font-size:8px;color:#666;}
+#gradePrintArea .gpt-print-header{font-family:monospace;font-size:12px;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid #000;color:#000;}
+
 /* BUSCA */
 #busca-results{padding:18px 24px;display:grid;gap:8px;}
 .film-card{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:0;transition:border-left-color 0.2s,background 0.15s;}
@@ -245,10 +274,27 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 .fpill{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.04em;padding:2px 8px;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;border-radius:2px;transition:all 0.1s;white-space:nowrap;}
 .fpill:hover{border-color:var(--text-dim);color:var(--text);}
 .fpill.active{background:var(--accent);border-color:var(--accent);color:#000;}
+.fpill.excluded{background:rgba(232,80,32,0.14);border-color:rgba(232,80,32,0.45);color:#ff8060;}
+.fp-hint{font-family:var(--mono);font-size:8px;color:var(--text-muted);margin-top:2px;}
 .bpill{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.06em;padding:2px 9px;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;border-radius:2px;transition:all 0.1s;white-space:nowrap;}
 .bpill:hover{border-color:var(--text-dim);color:var(--text);}
 .bpill.active-yes{background:rgba(61,186,110,0.16);border-color:rgba(61,186,110,0.45);color:#5ddc8a;}
 .bpill.active-no{background:rgba(232,80,32,0.12);border-color:rgba(232,80,32,0.35);color:#ff8060;}
+/* range filters */
+.fp-range-group{display:flex;flex-direction:column;gap:6px;padding:8px 0 4px;}
+.fp-range-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.fp-range-label{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);min-width:72px;}
+.fp-range-inputs{display:flex;align-items:center;gap:5px;}
+.fp-range-op{font-family:var(--mono);font-size:9px;font-weight:600;color:var(--text-muted);min-width:22px;text-align:center;}
+.fp-range-input{font-family:var(--mono);font-size:11px;background:var(--surface2);color:var(--text);border:1px solid var(--border2);padding:4px 8px;width:72px;outline:none;transition:border-color 0.15s;}
+.fp-range-input:focus{border-color:var(--accent);}
+.fp-range-input.has-val{border-color:var(--accent);color:var(--accent);}
+.fp-range-unit{font-family:var(--mono);font-size:9px;color:var(--text-muted);}
+.fp-range-sep{font-family:var(--mono);font-size:9px;color:var(--text-muted);padding:0 2px;}
+.fp-range-presets{display:flex;gap:3px;flex-wrap:wrap;margin-top:2px;}
+.fp-range-preset{font-family:var(--mono);font-size:9px;padding:2px 8px;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;border-radius:2px;transition:all 0.1s;white-space:nowrap;}
+.fp-range-preset:hover{border-color:var(--text-dim);color:var(--text);}
+.fp-range-preset.active{background:var(--accent);border-color:var(--accent);color:#000;}
 .filter-toggle-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;background:transparent;color:var(--text-dim);border:1px solid var(--border);font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
 .filter-toggle-btn:hover{border-color:var(--text-dim);color:var(--text);}
 .filter-toggle-btn.active{border-color:var(--accent);color:var(--accent);}
@@ -286,31 +332,6 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 .ingest-cplov-line{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--cpl-color);word-break:break-all;line-height:1.5;display:flex;gap:6px;align-items:baseline;}
 .ingest-cplov-tag{font-size:8px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(93,220,138,0.5);flex-shrink:0;border:1px solid rgba(93,220,138,0.25);padding:0px 4px;border-radius:2px;}
 .ingest-no-cpl{font-family:var(--mono);font-size:10px;color:var(--text-muted);font-style:italic;}
-/* INGEST PRINT */
-@media print{
-  #ingest-container{padding:0;}
-  .ingest-total-bar{background:#e8e8e8!important;border-left-color:#000!important;color:#000!important;}
-  .ingest-total-bar strong{color:#000!important;}
-  .ingest-cinema-header{background:#d8d8d8!important;border-left-color:#000!important;color:#000!important;}
-  .ingest-cinema-gb{color:#333!important;border-color:#aaa!important;background:none!important;}
-  .ingest-session{background:white!important;border-color:#ccc!important;}
-  .ingest-session-header{border-bottom-color:#ccc!important;}
-  .ingest-sess-name{color:#000!important;}
-  .ingest-sess-meta{color:#444!important;}
-  .ingest-sess-gb{color:#333!important;border-color:#aaa!important;}
-  .ingest-film-title{color:#000!important;}
-  .ingest-film-code{color:#555!important;}
-  .ingest-film-gb{color:#333!important;}
-  .ingest-cpl-block{background:#e8e8e8!important;border-left-color:#555!important;}
-  .ingest-cpl-line,.ingest-cplov-line{color:#000!important;font-size:9px;}
-  .ingest-cplov-tag{color:#555!important;border-color:#aaa!important;}
-  .ingest-no-cpl{color:#888!important;}
-  .ingest-spec-res{color:#333!important;border-color:#aaa!important;}
-  .badge{border-color:#555!important;color:#222!important;background:none!important;}
-  .ingest-film-num{color:#888!important;}
-  .ingest-cinema-block{margin-bottom:16px!important;page-break-inside:avoid;}
-  .ingest-film-row{padding:5px 14px!important;}
-}
 /* expand */
 .card-titulo-wrap{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
 .card-titulo-wrap:hover .card-titulo{color:var(--accent);}
@@ -400,7 +421,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
   #main-content{zoom:1!important;}
   @page{margin:14mm 11mm;size:A4 landscape;}
   body{background:white;color:black;}
-  header,.mode-bar,#landing{display:none!important;}
+  header,.mode-bar,#landing,.back-btn{display:none!important;}
   #app{display:block!important;}
   /* show only the active panel */
   .mode-panel{display:none!important;}
@@ -441,9 +462,8 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
   .footer-stamp{color:#666!important;}
   .empty-state{display:none!important;}
   /* INGEST */
-  #ingest-container{padding:0;}
-  .ingest-total-bar{background:#e8e8e8!important;border-left-color:#000!important;color:#000!important;}
-  .ingest-total-bar strong{color:#000!important;}
+  #ingest-container{padding:0!important;}
+  .ingest-total-bar{display:none!important;}
   .ingest-cinema-header{background:#d8d8d8!important;border-left-color:#000!important;color:#000!important;}
   .ingest-cinema-gb{color:#333!important;border-color:#aaa!important;background:none!important;}
   .ingest-session{background:white!important;border-color:#ccc!important;}
@@ -461,7 +481,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
   .ingest-no-cpl{color:#888!important;}
   .ingest-spec-res{color:#333!important;border-color:#aaa!important;}
   .ingest-film-num{color:#888!important;}
-  .ingest-cinema-block{margin-bottom:16px!important;page-break-inside:avoid;}
+  .ingest-cinema-block{margin-bottom:14px!important;page-break-inside:avoid;}
   .ingest-film-row{padding:5px 14px!important;}
 }
 </style>
@@ -470,6 +490,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 
 <header>
   <button class="logo" onclick="goHome()" title="Página inicial">OLGA · Suite</button>
+  <button class="back-btn" id="backBtn" onclick="goBack()">← Voltar</button>
   <div class="file-zone">
     <label class="upload-btn" for="fileInput">▲ XLSX</label>
     <input type="file" id="fileInput" accept=".xlsx,.xls">
@@ -496,11 +517,16 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 
 <div class="mode-bar hidden" id="barFicha">
   <select id="sessionSelect" disabled><option value="">— selecionar sessão —</option></select>
+  <div class="event-filters" id="fichaEventFilters"></div>
   <button class="print-btn" id="printBtn" disabled onclick="window.print()">⎙ Imprimir</button>
 </div>
 <div class="mode-bar hidden" id="barGrade">
   <div class="day-tabs" id="dayTabs"></div>
   <div class="event-filters" id="gradeEventFilters"></div>
+  <select id="gradeCinemaSelect" style="min-width:160px;margin-left:4px;" onchange="gradeCinemaFilter=this.value;renderGrade();">
+    <option value="">Todas as salas</option>
+  </select>
+  <button class="print-btn" onclick="openGradePrintModal()" style="margin-left:6px;">⎙ Tabela</button>
 </div>
 <div class="mode-bar hidden" id="barBusca">
   <div class="search-wrap">
@@ -513,7 +539,10 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 </div>
 <div id="filterPanel">
   <div class="fp-header">
-    <span class="fp-title">Filtros avançados</span>
+    <div>
+      <span class="fp-title">Filtros avançados</span>
+      <div class="fp-hint">1 clique = incluir · 2 cliques = excluir · 3 cliques = limpar</div>
+    </div>
     <button class="fp-clear" id="fpClearBtn" onclick="clearAllBuscaFilters()">✕ Limpar todos</button>
   </div>
   <div class="fp-sections">
@@ -524,6 +553,10 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
     <div class="fp-section">
       <div class="fp-section-title">Preenchimento</div>
       <div class="fp-groups" id="fpBinaryGroups"></div>
+    </div>
+    <div class="fp-section">
+      <div class="fp-section-title">Intervalo</div>
+      <div id="fpRangeGroups"></div>
     </div>
   </div>
 </div>
@@ -611,7 +644,47 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 
 <div id="tooltip"></div>
 
+<!-- Grade print modal -->
+<div id="gradePrintModal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);overflow-y:auto;">
+  <div style="background:var(--surface);border:1px solid var(--border);max-width:900px;margin:40px auto;padding:0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--surface2);">
+      <span style="font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);">⎙ Tabela de programação</span>
+      <button onclick="closeGradePrintModal()" style="font-family:var(--mono);font-size:13px;background:none;border:none;color:var(--text-dim);cursor:pointer;padding:0 4px;">✕</button>
+    </div>
+    <div style="padding:18px 20px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:20px;align-items:flex-end;">
+      <div>
+        <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Modo</div>
+        <div style="display:flex;gap:0;">
+          <label id="gptModeALabel" style="font-family:var(--mono);font-size:10px;padding:6px 14px;border:1px solid var(--accent);color:var(--accent);cursor:pointer;background:var(--accent-dim);">
+            <input type="radio" name="gptMode" value="A" checked style="display:none;" onchange="updateGptSelectors()"> Horários × Dias
+          </label>
+          <label id="gptModeBLabel" style="font-family:var(--mono);font-size:10px;padding:6px 14px;border:1px solid var(--border);border-left:none;color:var(--text-dim);cursor:pointer;background:transparent;">
+            <input type="radio" name="gptMode" value="B" style="display:none;" onchange="updateGptSelectors()"> Horários × Salas
+          </label>
+        </div>
+      </div>
+      <div id="gptSalaWrap">
+        <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">Sala fixa</div>
+        <select id="gptSalaSelect" style="min-width:200px;"></select>
+      </div>
+      <div id="gptDiaWrap" style="display:none;">
+        <div style="font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;">Dia fixo</div>
+        <select id="gptDiaSelect" style="min-width:200px;"></select>
+      </div>
+      <button onclick="buildGradePrintTable()" class="upload-btn" style="padding:7px 18px;align-self:flex-end;">Gerar</button>
+    </div>
+    <div id="gptTableWrap" style="padding:18px 20px;overflow-x:auto;min-height:80px;"></div>
+    <div style="padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;">
+      <button onclick="closeGradePrintModal()" class="print-btn">Fechar</button>
+      <button onclick="printGradeTable()" class="upload-btn" style="padding:7px 18px;">⎙ Imprimir</button>
+    </div>
+  </div>
+</div>
+
 </div><!-- /main-content -->
+
+<!-- Hidden area used during grade table print — MUST be direct child of body -->
+<div id="gradePrintArea" style="display:none;"></div>
 
 <!-- Worker script: parsed by Blob, runs off-thread -->
 <script id="workerScript" type="javascript/worker">
@@ -643,15 +716,11 @@ self.onmessage=function(e){
     for(var i=1;i<rows2.length;i++){
       var r=rows2[i];var nome=(r[0]||'').toString().trim();if(!nome)continue;
       var codes=[];for(var f2=4;f2<=13;f2++){var c=(r[f2]||'').toString().trim();if(c&&c!=='-'&&!/^=/.test(c))codes.push(c);}
-      var evento=codes.length&&filmesMap[codes[0]]?filmesMap[codes[0]].evento:'';
+      var evento=(r[15]||'').toString().trim();
+      if(!evento){for(var fi=0;fi<codes.length;fi++){if(filmesMap[codes[fi]]&&filmesMap[codes[fi]].evento){evento=filmesMap[codes[fi]].evento;break;}}}
       var s={nome:nome,cinema:r[1]||'',dia:fmtDateStr(r[2]),hora:fmtTimeStr(r[3]),filmes:codes,date:parseDate(r[2]),time:parseTime(r[3]),evento:evento};
       sessoesArr.push(s);sessoesMap[nome]=s;
       codes.forEach(function(c){if(!buscaReverseSessoes[c])buscaReverseSessoes[c]=[];buscaReverseSessoes[c].push(nome);});
-    }
-  }
-  var evSet=new Set();
-  filmesArr.forEach(function(f){if(f.evento)evSet.add(f.evento);});
-  sessoesArr.forEach(function(s){if(s.evento)evSet.add(s.evento);});
   self.postMessage({filmesMap:filmesMap,filmesArr:filmesArr,sessoesArr:sessoesArr,sessoesMap:sessoesMap,buscaReverseSessoes:buscaReverseSessoes,events:Array.from(evSet)});
 };
 </script>
@@ -659,15 +728,20 @@ self.onmessage=function(e){
 <script>
 var filmesMap={},filmesArr=[],sessoesArr=[],sessoesMap={};
 var buscaReverseSessoes={},eventColors={};
-var activeEventsGrade=new Set(),activeEventsBusca=new Set(),activeEventsIngest=new Set();
+var activeEventsGrade=new Set(),activeEventsBusca=new Set(),activeEventsIngest=new Set(),activeEventsFicha=new Set();
 var days=[],currentDay=null,buscaQuery='',dataLoaded=false,currentMode=null;
 var filteredFilmes=[];
-var ingestDays=[],currentIngestDay=null,ingestCinemaFilter='';
+var ingestDays=[],currentIngestDay=null,ingestCinemaFilter='',gradeCinemaFilter='';
+var navHistory=[];// stack of {mode, label} for back navigation
 var buscaFilters={
   evento:new Set(),hd:new Set(),idioma:new Set(),legenda:new Set(),vf:new Set(),
   lente:new Set(),som:new Set(),kdm:new Set(),status:new Set(),col_k:new Set(),
   resolucao:new Set(),fps:new Set(),
-  titulo_bin:null,obs_bin:null,cpl_bin:null,cplOV_bin:null,col_n_bin:null,legenda_bin:null
+  evento_ex:new Set(),hd_ex:new Set(),idioma_ex:new Set(),legenda_ex:new Set(),vf_ex:new Set(),
+  lente_ex:new Set(),som_ex:new Set(),kdm_ex:new Set(),status_ex:new Set(),col_k_ex:new Set(),
+  resolucao_ex:new Set(),fps_ex:new Set(),
+  titulo_bin:null,obs_bin:null,cpl_bin:null,cplOV_bin:null,col_n_bin:null,legenda_bin:null,
+  duracao_min:null,duracao_max:null,gb_min:null,gb_max:null
 };
 var PALETTE=[{bg:'#e8a020',text:'#000'},{bg:'#3dba6e',text:'#000'},{bg:'#4a9eff',text:'#000'},{bg:'#c87aff',text:'#000'},{bg:'#ff6b6b',text:'#000'},{bg:'#ffd93d',text:'#000'},{bg:'#6bcfcf',text:'#000'},{bg:'#ff9f43',text:'#000'}];
 
@@ -699,15 +773,11 @@ function applyParsedData(d,filename){
   buscaReverseSessoes=d.buscaReverseSessoes;
   var events=d.events;
   eventColors={};events.forEach(function(ev,i){eventColors[ev]=PALETTE[i%PALETTE.length];});
-  activeEventsGrade=new Set(events);activeEventsBusca=new Set(events);activeEventsIngest=new Set(events);
+  activeEventsGrade=new Set(events);activeEventsBusca=new Set(events);activeEventsIngest=new Set(events);activeEventsFicha=new Set(events);
   dataLoaded=true;
   ['tabFicha','tabGrade','tabBusca','tabIngest'].forEach(function(id){document.getElementById(id).disabled=false;});
   ['modCardFicha','modCardGrade','modCardBusca','modCardIngest'].forEach(function(id){document.getElementById(id).classList.remove('disabled');});
-  var sel=document.getElementById('sessionSelect');sel.innerHTML='<option value="">— selecionar sessão —</option>';
-  sessoesArr.forEach(function(s){var opt=document.createElement('option');opt.value=s.nome;opt.textContent=s.nome;sel.appendChild(opt);});
-  sel.disabled=false;
-  document.getElementById('searchInput').disabled=false;
-  buildGradeDays();window._gradeYearsOpen=null;buildGradeFilters();buildBuscaFilters();buildIngestDays();buildIngestFilters();buildBuscaFilterPanel();
+  buildGradeDays();window._gradeYearsOpen=null;buildFichaFilters();buildGradeFilters();buildBuscaFilters();buildIngestDays();buildIngestFilters();buildBuscaFilterPanel();
   fileNameEl.textContent=filename||'arquivo carregado';
   fileNameEl.classList.add('loaded');
   landingDrop.classList.add('loaded');
@@ -735,7 +805,8 @@ function parseWorkbook(data,filename){
     for(var i=1;i<rows2.length;i++){
       var r=rows2[i];var nome=(r[0]||'').toString().trim();if(!nome)continue;
       var codes=[];for(var f2=4;f2<=13;f2++){var c=(r[f2]||'').toString().trim();if(c&&c!=='-'&&!/^=/.test(c))codes.push(c);}
-      var evento=codes.length&&filmesMap[codes[0]]?filmesMap[codes[0]].evento:'';
+      var evento=(r[15]||'').toString().trim();
+      if(!evento){for(var fi=0;fi<codes.length;fi++){if(filmesMap[codes[fi]]&&filmesMap[codes[fi]].evento){evento=filmesMap[codes[fi]].evento;break;}}}
       var s={nome:nome,cinema:r[1]||'',dia:fmtDateStr(r[2]),hora:fmtTimeStr(r[3]),filmes:codes,date:parseDate(r[2]),time:parseTime(r[3]),evento:evento};
       sessoesArr.push(s);sessoesMap[nome]=s;
       codes.forEach(function(c){if(!buscaReverseSessoes[c])buscaReverseSessoes[c]=[];buscaReverseSessoes[c].push(nome);});
@@ -749,6 +820,7 @@ function parseWorkbook(data,filename){
 function goHome(){
   if(currentMode){
     currentMode=null;
+    navHistory=[];updateBackBtn();
     ['ficha','grade','busca','ingest'].forEach(function(m){
       var cap=m.charAt(0).toUpperCase()+m.slice(1);
       document.getElementById('tab'+cap).classList.remove('active');
@@ -762,8 +834,9 @@ function goHome(){
 
 function moduleCardClick(mode){if(dataLoaded)switchMode(mode);}
 
-function switchMode(mode){
+function switchMode(mode,noPush){
   currentMode=mode;
+  if(!noPush){navHistory=[];updateBackBtn();}
   document.getElementById('landing').style.display='none';
   document.getElementById('app').style.display='block';
   ['ficha','grade','busca','ingest'].forEach(function(m){
@@ -836,34 +909,35 @@ function buildIngestDays(){
     if(!seen.has(k)){seen.add(k);ingestDays.push({key:k,date:id});}
   });
   ingestDays.sort(function(a,b){return a.date-b.date;});
-  // default: newest day
   currentIngestDay=ingestDays.length?ingestDays[ingestDays.length-1].key:null;
-  // populate cinema dropdown
-  var cinemaSet=new Set();
-  sessoesArr.forEach(function(s){if(s.cinema)cinemaSet.add(s.cinema);});
-  var sel=document.getElementById('ingestCinemaSelect');
-  sel.innerHTML='<option value="">Todos os cinemas</option>';
-  Array.from(cinemaSet).sort().forEach(function(c){
-    var o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);
-  });
   ingestCinemaFilter='';
   window._ingestYearsOpen=null;
-  buildIngestFilters();
 }
-
-function buildIngestFilters(){buildPills(document.getElementById('ingestEventFilters'),eventColors,activeEventsIngest,renderIngest);}
 
 function renderIngestDayTabs(){
   var container=document.getElementById('ingestDayTabs');container.innerHTML='';
+  // only days that have ≥1 session from an active event
+  var activeDays=ingestDays.filter(function(d){
+    return sessoesArr.some(function(s){
+      if(!s.date)return false;
+      var id=new Date(s.date.getTime());id.setDate(id.getDate()-2);
+      return id.toISOString().slice(0,10)===d.key&&
+             (!s.evento||activeEventsIngest.has(s.evento))&&
+             (!ingestCinemaFilter||s.cinema===ingestCinemaFilter);
+    });
+  });
+  var validKeys=activeDays.map(function(d){return d.key;});
+  if(currentIngestDay&&validKeys.indexOf(currentIngestDay)===-1){
+    currentIngestDay=validKeys.length?validKeys[validKeys.length-1]:null;
+  }
   var byYear={},yearOrder=[];
-  ingestDays.forEach(function(d){
+  activeDays.forEach(function(d){
     var y=d.date.getFullYear();
     if(!byYear[y]){byYear[y]=[];yearOrder.push(y);}
     byYear[y].push(d);
   });
   if(!window._ingestYearsOpen){
     window._ingestYearsOpen=new Set();
-    // auto-open year of the newest selected day, collapsed by default
     if(currentIngestDay) window._ingestYearsOpen.add(new Date(currentIngestDay+'T00:00:00').getFullYear());
     else if(yearOrder.length) window._ingestYearsOpen.add(yearOrder[yearOrder.length-1]);
   }
@@ -879,7 +953,7 @@ function renderIngestDayTabs(){
     });
     container.appendChild(yBtn);
     if(isOpen){
-      byYear[y].forEach(function(d){
+      activeDays.filter(function(d){return d.date.getFullYear()===y;}).forEach(function(d){
         var btn=document.createElement('button');btn.className='day-tab'+(d.key===currentIngestDay?' active':'');
         btn.textContent=d.date.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});
         btn.addEventListener('click',function(){currentIngestDay=d.key;renderIngest();});
@@ -971,6 +1045,136 @@ function renderIngest(){
 
 function printIngest(){window.print();}
 
+/* GRADE PRINT TABLE */
+function openGradePrintModal(){
+  var modal=document.getElementById('gradePrintModal');
+  // populate sala select — only cinemas with sessions from active events
+  var cinemaSet=new Set();
+  sessoesGrade().forEach(function(s){if(s.cinema)cinemaSet.add(s.cinema);});
+  var ss=document.getElementById('gptSalaSelect');
+  ss.innerHTML='';
+  Array.from(cinemaSet).sort().forEach(function(c){var o=document.createElement('option');o.value=c;o.textContent=c;ss.appendChild(o);});
+  // populate dia select — only days with active-event sessions
+  var ds=document.getElementById('gptDiaSelect');
+  ds.innerHTML='';
+  days.filter(function(d){
+    return sessoesGrade().some(function(s){return s.date&&s.date.toISOString().slice(0,10)===d.key;});
+  }).forEach(function(d){
+    var o=document.createElement('option');o.value=d.key;
+    o.textContent=d.date.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});
+    if(d.key===currentDay)o.selected=true;
+    ds.appendChild(o);
+  });
+  document.querySelector('input[name="gptMode"][value="A"]').checked=true;
+  updateGptSelectors();
+  document.getElementById('gptTableWrap').innerHTML='';
+  modal.style.display='block';
+}
+
+function closeGradePrintModal(){
+  document.getElementById('gradePrintModal').style.display='none';
+}
+
+function updateGptSelectors(){
+  var mode=document.querySelector('input[name="gptMode"]:checked').value;
+  document.getElementById('gptSalaWrap').style.display=mode==='A'?'':'none';
+  document.getElementById('gptDiaWrap').style.display=mode==='B'?'':'none';
+  // style radio labels
+  var la=document.getElementById('gptModeALabel'),lb=document.getElementById('gptModeBLabel');
+  if(mode==='A'){la.style.cssText='font-family:var(--mono);font-size:10px;padding:6px 14px;border:1px solid var(--accent);color:var(--accent);cursor:pointer;background:var(--accent-dim);';lb.style.cssText='font-family:var(--mono);font-size:10px;padding:6px 14px;border:1px solid var(--border);border-left:none;color:var(--text-dim);cursor:pointer;background:transparent;';}
+  else{lb.style.cssText='font-family:var(--mono);font-size:10px;padding:6px 14px;border:1px solid var(--accent);color:var(--accent);cursor:pointer;background:var(--accent-dim);';la.style.cssText='font-family:var(--mono);font-size:10px;padding:6px 14px;border:1px solid var(--border);border-right:none;color:var(--text-dim);cursor:pointer;background:transparent;';}
+  document.getElementById('gptTableWrap').innerHTML='';
+}
+
+function slotKey(h,m){return(h%24)*60+(m<30?0:30);}
+function slotLabel(sk){var h=Math.floor(sk/60),m=sk%60;return String(h).padStart(2,'0')+':'+(m===0?'00':'30');}
+
+function buildGradePrintTable(){
+  var mode=document.querySelector('input[name="gptMode"]:checked').value;
+  var wrap=document.getElementById('gptTableWrap');
+  wrap.innerHTML='';
+
+  if(mode==='A'){
+    // Horários × Dias — sala fixa
+    var cinema=document.getElementById('gptSalaSelect').value;
+    if(!cinema){wrap.innerHTML='<p style="font-family:var(--mono);font-size:11px;color:var(--text-muted)">Selecione uma sala.</p>';return;}
+    var sessions=sessoesGrade().filter(function(s){return s.cinema===cinema&&s.date&&s.time;});
+    if(!sessions.length){wrap.innerHTML='<p style="font-family:var(--mono);font-size:11px;color:var(--text-muted)">Nenhuma sessão para esta sala.</p>';return;}
+    // collect unique day keys (sorted)
+    var daySet={};sessions.forEach(function(s){var k=s.date.toISOString().slice(0,10);if(!daySet[k])daySet[k]=s.date;});
+    var dayKeys=Object.keys(daySet).sort();
+    // collect unique slot keys
+    var slotSet=new Set();sessions.forEach(function(s){slotSet.add(slotKey(s.time.h,s.time.m));});
+    var slots=Array.from(slotSet).sort(function(a,b){return a-b;});
+    // index sessions by dayKey+slotKey
+    var idx={};sessions.forEach(function(s){var dk=s.date.toISOString().slice(0,10);var sk=slotKey(s.time.h,s.time.m);var key=dk+'|'+sk;if(!idx[key])idx[key]=[];idx[key].push(s);});
+    // build table
+    wrap.innerHTML=gptRenderTable(
+      ['Horário'].concat(dayKeys.map(function(k){return daySet[k].toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'2-digit'});})),
+      slots,
+      function(slot,colIdx){var dk=dayKeys[colIdx-1];return idx[dk+'|'+slot]||[];}
+    );
+    wrap.dataset.header='Sala: '+cinema;
+  }else{
+    // Horários × Salas — dia fixo
+    var dayKey=document.getElementById('gptDiaSelect').value;
+    if(!dayKey){wrap.innerHTML='<p style="font-family:var(--mono);font-size:11px;color:var(--text-muted)">Selecione um dia.</p>';return;}
+    var sessions2=sessoesGrade().filter(function(s){return s.date&&s.date.toISOString().slice(0,10)===dayKey&&s.time;});
+    if(!sessions2.length){wrap.innerHTML='<p style="font-family:var(--mono);font-size:11px;color:var(--text-muted)">Nenhuma sessão neste dia.</p>';return;}
+    var cinemaSet2=[];var cinemasSeen=new Set();sessions2.forEach(function(s){if(!cinemasSeen.has(s.cinema)){cinemasSeen.add(s.cinema);cinemaSet2.push(s.cinema);}});
+    var slotSet2=new Set();sessions2.forEach(function(s){slotSet2.add(slotKey(s.time.h,s.time.m));});
+    var slots2=Array.from(slotSet2).sort(function(a,b){return a-b;});
+    var idx2={};sessions2.forEach(function(s){var sk=slotKey(s.time.h,s.time.m);var key=s.cinema+'|'+sk;if(!idx2[key])idx2[key]=[];idx2[key].push(s);});
+    // find label for selected day
+    var dayObj=days.find(function(d){return d.key===dayKey;});
+    var dayLbl=dayObj?dayObj.date.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'}):'';
+    wrap.innerHTML=gptRenderTable(
+      ['Horário'].concat(cinemaSet2),
+      slots2,
+      function(slot,colIdx){var c=cinemaSet2[colIdx-1];return idx2[c+'|'+slot]||[];}
+    );
+    wrap.dataset.header='Programação: '+dayLbl;
+  }
+}
+
+function gptRenderTable(headers,slots,getSessionsFn){
+  var html='<table class="gpt-table"><thead><tr>';
+  headers.forEach(function(h){html+='<th>'+h+'</th>';});
+  html+='</tr></thead><tbody>';
+  slots.forEach(function(sk){
+    html+='<tr><td class="slot-label">'+slotLabel(sk)+'</td>';
+    for(var c=1;c<headers.length;c++){
+      var ss=getSessionsFn(sk,c);
+      if(!ss.length){html+='<td class="empty"></td>';continue;}
+      html+='<td>';
+      ss.forEach(function(s){
+        var nf=s.filmes.length;
+        var safeName=s.nome.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+        html+='<div class="gpt-sess-entry" onclick="closeGradePrintModal();goToFicha(\''+safeName+'\')" title="Abrir ficha: '+s.nome.replace(/"/g,'&quot;')+'">';
+        html+='<div class="gpt-sess-time">'+s.time.str+'</div>';
+        html+='<div class="gpt-sess-name">'+s.nome+'</div>';
+        if(nf)html+='<div class="gpt-sess-films">'+nf+' filme'+(nf!==1?'s':'')+'</div>';
+        html+='</div>';
+      });
+      html+='</td>';
+    }
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  return html;
+}
+
+function printGradeTable(){
+  var wrap=document.getElementById('gptTableWrap');
+  if(!wrap.querySelector('table')){buildGradePrintTable();if(!wrap.querySelector('table'))return;}
+  var header=wrap.dataset.header||'Programação';
+  var pa=document.getElementById('gradePrintArea');
+  pa.innerHTML='<div class="gpt-print-header">'+header+'</div>'+wrap.innerHTML;
+  document.body.classList.add('print-grade-table');
+  window.print();
+  document.body.classList.remove('print-grade-table');
+}
+
 function buildPills(container,evColors,activeSet,onToggle){
   container.innerHTML='';if(!Object.keys(evColors).length)return;
   var lbl=document.createElement('span');lbl.className='filter-label';lbl.textContent='EVENTO:';container.appendChild(lbl);
@@ -980,28 +1184,106 @@ function buildPills(container,evColors,activeSet,onToggle){
     container.appendChild(pill);
   });
 }
-function buildGradeFilters(){buildPills(document.getElementById('gradeEventFilters'),eventColors,activeEventsGrade,renderGrade);}
+/* helpers: sessões filtradas por evento */
+function sessoesFicha(){return sessoesArr.filter(function(s){return!s.evento||activeEventsFicha.has(s.evento);});}
+function sessoesGrade(){return sessoesArr.filter(function(s){return!s.evento||activeEventsGrade.has(s.evento);});}
+function sessoesIngest(){return sessoesArr.filter(function(s){return!s.evento||activeEventsIngest.has(s.evento);});}
+
+function rebuildSessionSelect(){
+  var sel=document.getElementById('sessionSelect');
+  var prev=sel.value;
+  sel.innerHTML='<option value="">— selecionar sessão —</option>';
+  sessoesFicha().forEach(function(s){var o=document.createElement('option');o.value=s.nome;o.textContent=s.nome;sel.appendChild(o);});
+  sel.disabled=false;
+  // keep selection if still valid, otherwise reset ficha
+  if(prev&&sessoesMap[prev]&&(!sessoesMap[prev].evento||activeEventsFicha.has(sessoesMap[prev].evento))){
+    sel.value=prev;
+  }else if(prev){
+    sel.value='';
+    var fe=document.getElementById('fichaEmpty'),fw=document.getElementById('fichaWrap'),pb=document.getElementById('printBtn');
+    fw.style.display='none';fe.style.display='flex';pb.disabled=true;
+  }
+}
+
+function buildFichaFilters(){
+  buildPills(document.getElementById('fichaEventFilters'),eventColors,activeEventsFicha,function(){
+    rebuildSessionSelect();
+  });
+  rebuildSessionSelect();
+  document.getElementById('searchInput').disabled=false;
+}
+
+function rebuildGradeCinemaSelect(){
+  var active=sessoesGrade();
+  var cs=new Set();active.forEach(function(s){if(s.cinema)cs.add(s.cinema);});
+  var sel=document.getElementById('gradeCinemaSelect');
+  var prev=sel.value;
+  sel.innerHTML='<option value="">Todas as salas</option>';
+  Array.from(cs).sort().forEach(function(c){var o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
+  // keep selection only if still valid
+  if(prev&&cs.has(prev))sel.value=prev;
+  else{sel.value='';gradeCinemaFilter='';}
+}
+
+function buildGradeFilters(){
+  buildPills(document.getElementById('gradeEventFilters'),eventColors,activeEventsGrade,function(){
+    rebuildGradeCinemaSelect();
+    window._gradeYearsOpen=null;
+    renderGrade();
+  });
+  rebuildGradeCinemaSelect();
+}
+
 function buildBuscaFilters(){buildPills(document.getElementById('buscaEventFilters'),eventColors,activeEventsBusca,function(){renderBuscaResults();buildBuscaFilterPanel();});}
-function buildIngestFilters(){buildPills(document.getElementById('ingestEventFilters'),eventColors,activeEventsIngest,renderIngest);}
+
+function rebuildIngestCinemaSelect(){
+  var active=sessoesIngest();
+  var cs=new Set();active.forEach(function(s){if(s.cinema)cs.add(s.cinema);});
+  var sel=document.getElementById('ingestCinemaSelect');
+  var prev=sel.value;
+  sel.innerHTML='<option value="">Todos os cinemas</option>';
+  Array.from(cs).sort().forEach(function(c){var o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
+  if(prev&&cs.has(prev))sel.value=prev;
+  else{sel.value='';ingestCinemaFilter='';}
+}
+
+function buildIngestFilters(){
+  buildPills(document.getElementById('ingestEventFilters'),eventColors,activeEventsIngest,function(){
+    rebuildIngestCinemaSelect();
+    window._ingestYearsOpen=null;
+    renderIngest();
+  });
+  rebuildIngestCinemaSelect();
+}
 
 function renderDayTabs(){
   var container=document.getElementById('dayTabs');container.innerHTML='';
+  // only days that have ≥1 session from an active event (and optional cinema filter)
+  var activeDays=days.filter(function(d){
+    return sessoesArr.some(function(s){
+      return s.date&&s.date.toISOString().slice(0,10)===d.key&&
+             (!s.evento||activeEventsGrade.has(s.evento))&&
+             (!gradeCinemaFilter||s.cinema===gradeCinemaFilter);
+    });
+  });
+  // if currentDay is no longer valid, pick the last valid day
+  var validKeys=activeDays.map(function(d){return d.key;});
+  if(currentDay&&validKeys.indexOf(currentDay)===-1){
+    currentDay=validKeys.length?validKeys[validKeys.length-1]:null;
+  }
   var byYear={},yearOrder=[];
-  days.forEach(function(d){
+  activeDays.forEach(function(d){
     var y=d.date.getFullYear();
     if(!byYear[y]){byYear[y]=[];yearOrder.push(y);}
     byYear[y].push(d);
   });
-  // track which years are open
   if(!window._gradeYearsOpen){
     window._gradeYearsOpen=new Set();
-    // auto-open the year of the current selected day
     if(currentDay) window._gradeYearsOpen.add(new Date(currentDay+'T00:00:00').getFullYear());
     else if(yearOrder.length) window._gradeYearsOpen.add(yearOrder[yearOrder.length-1]);
   }
   yearOrder.forEach(function(y){
     var isOpen=window._gradeYearsOpen.has(y);
-    // year toggle button
     var yBtn=document.createElement('button');
     yBtn.className='year-tab'+(isOpen?' open':'');
     yBtn.innerHTML=String(y)+'<span class="year-arrow">'+(isOpen?'▾':'▸')+'</span>';
@@ -1011,7 +1293,6 @@ function renderDayTabs(){
       renderDayTabs();
     });
     container.appendChild(yBtn);
-    // day buttons — only if year is open
     if(isOpen){
       byYear[y].forEach(function(d){
         var btn=document.createElement('button');btn.className='day-tab'+(d.key===currentDay?' active':'');
@@ -1023,15 +1304,34 @@ function renderDayTabs(){
   });
 }
 
+function goBack(){
+  if(!navHistory.length)return;
+  var prev=navHistory.pop();
+  updateBackBtn();
+  switchMode(prev.mode,true); // true = no push
+}
+
+function updateBackBtn(){
+  var btn=document.getElementById('backBtn');
+  if(navHistory.length){
+    btn.classList.add('visible');
+    btn.textContent='← '+navHistory[navHistory.length-1].label;
+  }else{
+    btn.classList.remove('visible');
+  }
+}
+
 function goToFicha(nomeSessao){
-  // set the select to this session
+  // push current mode to history before navigating
+  if(currentMode&&currentMode!=='ficha'){
+    var labels={grade:'Grade',busca:'Busca',ingest:'Ingest'};
+    navHistory.push({mode:currentMode,label:labels[currentMode]||currentMode});
+    updateBackBtn();
+  }
   var sel=document.getElementById('sessionSelect');
   sel.value=nomeSessao;
-  // trigger change manually
   var ev=document.createEvent('Event');ev.initEvent('change',true,true);sel.dispatchEvent(ev);
-  // switch to ficha tab
-  switchMode('ficha');
-  // scroll to top
+  switchMode('ficha',true); // true = no push
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -1040,7 +1340,11 @@ function renderGrade(){
   var ge=document.getElementById('gradeEmpty'),gw=document.getElementById('gradeWrap');
   var chr=document.getElementById('colHeaderRow'),gb2=document.getElementById('gridBody');
   var tip=document.getElementById('tooltip');
-  var ds=sessoesArr.filter(function(s){return s.date&&s.date.toISOString().slice(0,10)===currentDay;});
+  var ds=sessoesArr.filter(function(s){
+    return s.date&&s.date.toISOString().slice(0,10)===currentDay&&
+           (!s.evento||activeEventsGrade.has(s.evento))&&
+           (!gradeCinemaFilter||s.cinema===gradeCinemaFilter);
+  });
   if(!ds.length){gw.style.display='none';ge.style.display='flex';return;}
   ge.style.display='none';gw.style.display='block';
   var co=[],cs=new Set();ds.forEach(function(s){if(!cs.has(s.cinema)){cs.add(s.cinema);co.push(s.cinema);}});
@@ -1063,8 +1367,7 @@ function renderGrade(){
       var dur2=totalMinsS>0?totalMinsS:Math.max(60,s.filmes.length*25);
       var tm=(s.time.h-minH)*60+s.time.m;
       var c2=eventColors[s.evento]||{bg:'#555',text:'#fff'};
-      var dimmed=s.evento&&!activeEventsGrade.has(s.evento);
-      var blk=document.createElement('div');blk.className='session-block'+(dimmed?' dimmed':'');
+      var blk=document.createElement('div');blk.className='session-block';
       blk.style.top=(tm*PPM)+'px';blk.style.height=Math.max(32,dur2*PPM)+'px';blk.style.background=c2.bg;blk.style.color=c2.text;
       blk.innerHTML='<div class="block-time">'+s.time.str+'</div><div class="block-name">'+s.nome+'</div>'+(s.filmes.length?'<div class="block-films">'+s.filmes.length+' filme'+(s.filmes.length!==1?'s':'')+'</div>':'')+(s.evento?'<div class="block-event">'+s.evento+'</div>':'')+'<div class="block-hint">↗ ficha</div>';
       blk.addEventListener('mouseenter',function(ev){showTooltip(ev,s);});
@@ -1083,7 +1386,7 @@ function showTooltip(ev,s){
   s.filmes.forEach(function(c){var f=filmesMap[c];if(!f)return;var d=f.duracao||'';if(/^\d{1,2}:\d{2}/.test(d)){var p=d.split(':').map(Number);totalMinsS+=p[0]*60+p[1];}});
   var durStr=totalMinsS>0?Math.floor(totalMinsS/60)+'h'+String(totalMinsS%60).padStart(2,'0'):'';
   var fl=s.filmes.map(function(c){var f=filmesMap[c];if(!f)return'<div class="tt-film">'+c+'</div>';return'<div class="tt-film"><span>'+f.titulo+'</span> · '+c+'</div>';}).join('');
-  tip.innerHTML='<div class="tt-name">'+s.nome+'</div><div class="tt-row">⏰ <span>'+(s.time?s.time.str:'—')+(durStr?' · '+durStr:'')+'</span></div><div class="tt-row">🎭 <span>'+s.cinema+'</span></div>'+(s.evento?'<div class="tt-row">📋 <span>'+s.evento+'</span></div>':'')+(fl?'<div class="tt-films">'+fl+'</div>':'');
+  tip.innerHTML='<div class="tt-name">'+s.nome+'</div><div class="tt-row">📅 <span>'+s.dia+'</span></div><div class="tt-row">⏰ <span>'+(s.time?s.time.str:'—')+(durStr?' · '+durStr:'')+'</span></div><div class="tt-row">🎭 <span>'+s.cinema+'</span></div>'+(s.evento?'<div class="tt-row">📋 <span>'+s.evento+'</span></div>':'')+(fl?'<div class="tt-films">'+fl+'</div>':'');
   tip.style.display='block';moveTooltip(ev);
 }
 function moveTooltip(ev){var tip=document.getElementById('tooltip');var x=ev.clientX+16,y=ev.clientY-8,tw=tip.offsetWidth,th2=tip.offsetHeight;tip.style.left=(x+tw>window.innerWidth?x-tw-32:x)+'px';tip.style.top=(y+th2>window.innerHeight?y-th2:y)+'px';}
@@ -1153,9 +1456,11 @@ function toggleFilterPanel(){
 function countActiveFilters(){
   var n=0;
   var normKeys=['evento','hd','idioma','legenda','vf','lente','som','kdm','status','col_k','resolucao','fps'];
-  normKeys.forEach(function(k){if(buscaFilters[k].size>0)n++;});
+  normKeys.forEach(function(k){if(buscaFilters[k].size>0||buscaFilters[k+'_ex'].size>0)n++;});
   var binKeys=['titulo_bin','obs_bin','cpl_bin','cplOV_bin','col_n_bin','legenda_bin'];
   binKeys.forEach(function(k){if(buscaFilters[k]!==null)n++;});
+  if(buscaFilters.duracao_min!==null||buscaFilters.duracao_max!==null)n++;
+  if(buscaFilters.gb_min!==null||buscaFilters.gb_max!==null)n++;
   return n;
 }
 
@@ -1170,24 +1475,30 @@ function updateFilterBadge(){
 
 function clearAllBuscaFilters(){
   var normKeys=['evento','hd','idioma','legenda','vf','lente','som','kdm','status','col_k','resolucao','fps'];
-  normKeys.forEach(function(k){buscaFilters[k].clear();});
+  normKeys.forEach(function(k){buscaFilters[k].clear();buscaFilters[k+'_ex'].clear();});
   ['titulo_bin','obs_bin','cpl_bin','cplOV_bin','col_n_bin','legenda_bin'].forEach(function(k){buscaFilters[k]=null;});
-  // reset pill visuals
-  document.querySelectorAll('#fpNormalGroups .fpill').forEach(function(p){p.classList.remove('active');});
+  buscaFilters.duracao_min=null;buscaFilters.duracao_max=null;
+  buscaFilters.gb_min=null;buscaFilters.gb_max=null;
+  document.querySelectorAll('#fpNormalGroups .fpill').forEach(function(p){p.classList.remove('active','excluded');});
+  document.querySelectorAll('#fpNormalGroups .fp-group-label').forEach(function(l){l.classList.remove('has-active');});
   document.querySelectorAll('#fpBinaryGroups .bpill').forEach(function(p){p.classList.remove('active-yes','active-no');});
+  document.querySelectorAll('#fpBinaryGroups .fp-group-label').forEach(function(l){l.classList.remove('has-active');});
+  document.querySelectorAll('#fpRangeGroups .fp-range-input').forEach(function(i){i.value='';i.classList.remove('has-val');});
+  document.querySelectorAll('#fpRangeGroups .fp-range-preset').forEach(function(p){p.classList.remove('active');});
   updateFilterBadge();
   renderBuscaResults();
 }
 
+function parseDurMinutes(v){if(!v)return null;v=v.toString().trim();var m=v.match(/^(\d+):(\d{2})$/);if(m)return parseInt(m[1])*60+parseInt(m[2]);var n=parseFloat(v.replace(',','.'));return isNaN(n)?null:n;}
+function parseGB(v){if(!v)return null;var n=parseFloat(v.toString().replace(',','.'));return isNaN(n)?null:n;}
+
 function applyBuscaFilters(f){
-  // normal multi-value filters
   var normMap={evento:'evento',hd:'hd',idioma:'idioma',legenda:'legenda',vf:'vf',lente:'lente',som:'som',kdm:'kdm',status:'status',col_k:'col_n',resolucao:'resolucao',fps:'fps'};
   for(var key in normMap){
-    if(buscaFilters[key].size===0)continue;
     var val=(f[normMap[key]]||'').toString().trim();
-    if(!buscaFilters[key].has(val))return false;
+    if(buscaFilters[key].size>0&&!buscaFilters[key].has(val))return false;
+    if(buscaFilters[key+'_ex']&&buscaFilters[key+'_ex'].has(val))return false;
   }
-  // binary filters
   var binMap={titulo_bin:'titulo',obs_bin:'obs',cpl_bin:'cpl',cplOV_bin:'cplOV',col_n_bin:'col_n',legenda_bin:'legenda'};
   for(var bk in binMap){
     var state=buscaFilters[bk];
@@ -1195,6 +1506,20 @@ function applyBuscaFilters(f){
     var bval=clean(f[binMap[bk]]);
     if(state==='sim'&&!bval)return false;
     if(state==='nao'&&bval)return false;
+  }
+  // range: duracao (in minutes)
+  if(buscaFilters.duracao_min!==null||buscaFilters.duracao_max!==null){
+    var dm=parseDurMinutes(f.duracao);
+    if(dm===null)return false;
+    if(buscaFilters.duracao_min!==null&&dm<buscaFilters.duracao_min)return false;
+    if(buscaFilters.duracao_max!==null&&dm>buscaFilters.duracao_max)return false;
+  }
+  // range: GB
+  if(buscaFilters.gb_min!==null||buscaFilters.gb_max!==null){
+    var gv=parseGB(f.gb);
+    if(gv===null)return false;
+    if(buscaFilters.gb_min!==null&&gv<buscaFilters.gb_min)return false;
+    if(buscaFilters.gb_max!==null&&gv>buscaFilters.gb_max)return false;
   }
   return true;
 }
@@ -1249,7 +1574,7 @@ function buildBuscaFilterPanel(){
     var wrap=document.createElement('div');wrap.className='fp-pills';
 
     function refreshLblState(){
-      var n=buscaFilters[fd.key].size;
+      var n=buscaFilters[fd.key].size+buscaFilters[fd.key+'_ex'].size;
       countBadge.textContent=n;
       lbl.classList.toggle('has-active',n>0);
     }
@@ -1257,10 +1582,20 @@ function buildBuscaFilterPanel(){
     sorted.forEach(function(v){
       var p=document.createElement('button');p.className='fpill';p.textContent=v;
       p.addEventListener('click',function(){
-        if(buscaFilters[fd.key].has(v)){buscaFilters[fd.key].delete(v);p.classList.remove('active');}
-        else{buscaFilters[fd.key].add(v);p.classList.add('active');}
-        refreshLblState();
-        updateFilterBadge();renderBuscaResults();
+        if(buscaFilters[fd.key].has(v)){
+          // included → excluded
+          buscaFilters[fd.key].delete(v);
+          buscaFilters[fd.key+'_ex'].add(v);
+          p.classList.remove('active');p.classList.add('excluded');
+        }else if(buscaFilters[fd.key+'_ex'].has(v)){
+          // excluded → neutral
+          buscaFilters[fd.key+'_ex'].delete(v);
+          p.classList.remove('excluded');
+        }else{
+          // neutral → included
+          buscaFilters[fd.key].add(v);p.classList.add('active');
+        }
+        refreshLblState();updateFilterBadge();renderBuscaResults();
       });
       wrap.appendChild(p);
     });
@@ -1307,6 +1642,117 @@ function buildBuscaFilterPanel(){
     row.appendChild(lbl);row.appendChild(wrap);bg.appendChild(row);
   });
   updateFilterBadge();
+  buildRangeFilters();
+}
+
+function buildRangeFilters(){
+  var rg=document.getElementById('fpRangeGroups');
+  rg.innerHTML='';
+
+  var fields=[
+    {
+      label:'Duração',unit:'min',
+      minKey:'duracao_min',maxKey:'duracao_max',
+      parse:parseDurMinutes,
+      minPh:'mín (min)',maxPh:'máx (min)',
+      presets:[
+        {label:'< 1h',min:null,max:59},
+        {label:'1–2h',min:60,max:119},
+        {label:'> 2h',min:120,max:null},
+        {label:'curta < 15\'',min:null,max:14},
+      ]
+    },
+    {
+      label:'Tamanho',unit:'GB',
+      minKey:'gb_min',maxKey:'gb_max',
+      parse:parseGB,
+      minPh:'mín (GB)',maxPh:'máx (GB)',
+      presets:[
+        {label:'< 50 GB',min:null,max:50},
+        {label:'50–100 GB',min:50,max:100},
+        {label:'> 100 GB',min:100,max:null},
+        {label:'> 200 GB',min:200,max:null},
+      ]
+    }
+  ];
+
+  fields.forEach(function(fd){
+    var wrap=document.createElement('div');wrap.className='fp-range-group';
+
+    // label row
+    var titleRow=document.createElement('div');
+    titleRow.style.cssText='font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);padding:0 0 4px 0;border-bottom:1px solid var(--border);margin-bottom:6px;';
+    titleRow.textContent=fd.label;
+    wrap.appendChild(titleRow);
+
+    // inputs row
+    var inputsRow=document.createElement('div');inputsRow.className='fp-range-row';
+
+    function makeInput(ph,stateKey,isMax){
+      var inp=document.createElement('input');
+      inp.type='number';inp.min='0';inp.step='1';
+      inp.className='fp-range-input';inp.placeholder=ph;
+      if(buscaFilters[stateKey]!==null){inp.value=buscaFilters[stateKey];inp.classList.add('has-val');}
+      inp.addEventListener('input',function(){
+        var v=inp.value.trim();
+        inp.classList.toggle('has-val',v!=='');
+        buscaFilters[stateKey]=v===''?null:parseFloat(v);
+        // clear any active preset whose values don't match anymore
+        wrap.querySelectorAll('.fp-range-preset').forEach(function(p){
+          var mn=p.dataset.min===''?null:parseFloat(p.dataset.min);
+          var mx=p.dataset.max===''?null:parseFloat(p.dataset.max);
+          if(mn!==buscaFilters[fd.minKey]||mx!==buscaFilters[fd.maxKey])p.classList.remove('active');
+          else p.classList.add('active');
+        });
+        updateFilterBadge();renderBuscaResults();
+      });
+      return inp;
+    }
+
+    var opMin=document.createElement('span');opMin.className='fp-range-op';opMin.textContent='≥';
+    var inpMin=makeInput(fd.minPh,fd.minKey,false);
+    var sep=document.createElement('span');sep.className='fp-range-sep';sep.textContent='·';
+    var opMax=document.createElement('span');opMax.className='fp-range-op';opMax.textContent='≤';
+    var inpMax=makeInput(fd.maxPh,fd.maxKey,true);
+    var unit=document.createElement('span');unit.className='fp-range-unit';unit.textContent=fd.unit;
+    inputsRow.appendChild(opMin);inputsRow.appendChild(inpMin);
+    inputsRow.appendChild(sep);
+    inputsRow.appendChild(opMax);inputsRow.appendChild(inpMax);
+    inputsRow.appendChild(unit);
+    wrap.appendChild(inputsRow);
+
+    // presets row
+    var presetsRow=document.createElement('div');presetsRow.className='fp-range-presets';
+    fd.presets.forEach(function(pr){
+      var btn=document.createElement('button');btn.className='fp-range-preset';btn.textContent=pr.label;
+      btn.dataset.min=pr.min===null?'':pr.min;
+      btn.dataset.max=pr.max===null?'':pr.max;
+      // mark active if matches current state
+      if(buscaFilters[fd.minKey]===pr.min&&buscaFilters[fd.maxKey]===pr.max)btn.classList.add('active');
+      btn.addEventListener('click',function(){
+        var alreadyActive=btn.classList.contains('active');
+        // clear all presets
+        presetsRow.querySelectorAll('.fp-range-preset').forEach(function(p){p.classList.remove('active');});
+        if(alreadyActive){
+          buscaFilters[fd.minKey]=null;buscaFilters[fd.maxKey]=null;
+          inpMin.value='';inpMin.classList.remove('has-val');
+          inpMax.value='';inpMax.classList.remove('has-val');
+        }else{
+          btn.classList.add('active');
+          buscaFilters[fd.minKey]=pr.min;buscaFilters[fd.maxKey]=pr.max;
+          inpMin.value=pr.min===null?'':pr.min;inpMin.classList.toggle('has-val',pr.min!==null);
+          inpMax.value=pr.max===null?'':pr.max;inpMax.classList.toggle('has-val',pr.max!==null);
+        }
+        updateFilterBadge();renderBuscaResults();
+      });
+      presetsRow.appendChild(btn);
+    });
+    wrap.appendChild(presetsRow);
+    rg.appendChild(wrap);
+
+    // spacer between fields
+    var sp=document.createElement('div');sp.style.height='12px';rg.appendChild(sp);
+  });
 }
 
 function renderBuscaResults(){
