@@ -186,7 +186,7 @@ td.cpl-cell{background:var(--cpl-bg);border-left:3px solid var(--cpl-border);pad
 .block-event{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:rgba(0,0,0,0.45);margin-top:2px;}
 .block-hint{font-family:var(--mono);font-size:8px;color:rgba(0,0,0,0.3);margin-top:4px;opacity:0;transition:opacity 0.15s;}
 .session-block:hover .block-hint{opacity:1;}
-#tooltip{position:fixed;z-index:9999;background:#1c1c1c;border:1px solid #333;padding:12px 14px;min-width:220px;max-width:300px;pointer-events:none;display:none;box-shadow:0 8px 32px rgba(0,0,0,0.6);}
+#tooltip{position:fixed;z-index:9999;background:#1c1c1c;border:1px solid #333;padding:14px 16px;min-width:280px;max-width:380px;pointer-events:none;display:none;box-shadow:0 8px 32px rgba(0,0,0,0.6);}
 .tt-name{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--accent);margin-bottom:6px;}
 .tt-row{font-family:var(--mono);font-size:10px;color:var(--text-dim);line-height:1.8;}
 .tt-row span{color:var(--text);}
@@ -529,6 +529,31 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
   .ingest-film-num{color:#888!important;}
   .ingest-cinema-block{margin-bottom:14px!important;page-break-inside:avoid;}
   .ingest-film-row{padding:5px 14px!important;}
+  /* BUSCA PRINT */
+  body.print-busca header,.mode-bar,#filterPanel,.filter-toggle-btn,.search-clear,.back-btn{display:none!important;}
+  body.print-busca #busca-panel{display:block!important;}
+  body.print-busca .film-card{background:white!important;border:1px solid #ccc!important;border-left:3px solid #999!important;page-break-inside:avoid;margin-bottom:6px;}
+  body.print-busca .film-card:hover{background:white!important;}
+  body.print-busca .card-titulo{color:#000!important;font-size:13px!important;}
+  body.print-busca .card-codigo{color:#555!important;}
+  body.print-busca .card-evento{color:#000!important;}
+  body.print-busca .card-top{flex-wrap:wrap;}
+  body.print-busca .expand-toggle{display:none!important;}
+  body.print-busca .card-expand{display:none!important;}
+  body.print-busca .card-obs{color:#333!important;}
+  body.print-busca .meta-tag{color:#333!important;}
+  body.print-busca .meta-tag .label{color:#777!important;}
+  body.print-busca .badge{background:none!important;border:1px solid #666!important;color:#222!important;}
+  body.print-busca .badge-kdm{background:none!important;border:1px solid #000!important;color:#000!important;font-weight:700!important;}
+  body.print-busca .badge-kdm-no{color:#bbb!important;}
+  body.print-busca .card-cpl{background:#efefef!important;border-left:2px solid #555!important;}
+  body.print-busca .cpl-label{color:#555!important;}
+  body.print-busca .cpl-value{color:#000!important;font-size:11px!important;}
+  body.print-busca .cpl-sub{color:#444!important;}
+  body.print-busca .cpl-ov-value{color:#000!important;}
+  body.print-busca .card-sessions{display:none!important;}
+  body.print-busca #busca-results{padding:0!important;gap:5px!important;}
+  body.print-busca .busca-print-header{display:block!important;font-family:var(--mono);font-size:10px;color:#666;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #ccc;}
 }
 </style>
 </head>
@@ -583,6 +608,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
   <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterPanel()">⊞ Filtros <span class="filter-badge" id="filterBadge"></span></button>
   <div class="event-filters" id="buscaEventFilters"></div>
   <span class="result-count" id="resultCount"></span>
+  <button class="print-btn" onclick="printBusca()" style="margin-left:auto;">⎙ Imprimir</button>
 </div>
 <div id="filterPanel">
   <div class="fp-header">
@@ -684,6 +710,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
     </div>
   </div>
   <div class="mode-panel" id="busca-panel">
+    <div class="busca-print-header" id="buscaPrintHeader" style="display:none;padding:18px 24px 0;"></div>
     <div class="empty-state" id="buscaEmpty">
       <div class="icon">🔍</div>
       <p>Digite para buscar filmes.</p>
@@ -711,9 +738,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
   </div>
 </div>
 
-<div id="tooltip"></div>
 
-<!-- Grade print modal -->
 <div id="gradePrintModal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.7);overflow-y:auto;">
   <div style="background:var(--surface);border:1px solid var(--border);max-width:900px;margin:40px auto;padding:0;">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--surface2);">
@@ -754,6 +779,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 
 <!-- Hidden area used during grade table print — MUST be direct child of body -->
 <div id="gradePrintArea" style="display:none;"></div>
+<div id="tooltip"></div>
 
 <!-- Worker script: parsed by Blob, runs off-thread -->
 <script id="workerScript" type="javascript/worker">
@@ -936,6 +962,8 @@ function switchMode(mode,noPush){
   currentMode=mode;
   if(!noPush){navHistory=[];updateBackBtn();}
   if(!noPush&&!_browserNav)history.pushState({olga:mode},'');
+  // always collapse the busca filter panel when leaving busca
+  if(mode!=='busca'&&_fpOpen){_fpOpen=false;document.getElementById('filterPanel').classList.remove('open');document.getElementById('filterToggleBtn').classList.remove('active');}
   document.getElementById('landing').style.display='none';
   document.getElementById('app').style.display='block';
   ['ficha','grade','busca','ingest','cinemas'].forEach(function(m){
@@ -1145,6 +1173,20 @@ function renderIngest(){
 
 function printIngest(){window.print();}
 
+function printBusca(){
+  // build header with current query and filter summary
+  var q=buscaQuery;
+  var count=filteredFilmes.length;
+  var hdr=document.getElementById('buscaPrintHeader');
+  var qStr=q?'Busca: "'+q+'" · ':'';
+  hdr.textContent='OLGA · Busca · '+qStr+count+' filme'+(count!==1?'s':'')+' · '+new Date().toLocaleString('pt-BR');
+  hdr.style.display='block';
+  document.body.classList.add('print-busca');
+  window.print();
+  document.body.classList.remove('print-busca');
+  hdr.style.display='none';
+}
+
 /* GRADE PRINT TABLE */
 function openGradePrintModal(){
   var modal=document.getElementById('gradePrintModal');
@@ -1277,12 +1319,39 @@ function printGradeTable(){
 
 function buildPills(container,evColors,activeSet,onToggle){
   container.innerHTML='';if(!Object.keys(evColors).length)return;
-  var lbl=document.createElement('span');lbl.className='filter-label';lbl.textContent='EVENTO:';container.appendChild(lbl);
-  Object.entries(evColors).forEach(function(entry){var ev=entry[0],col=entry[1];
-    var pill=document.createElement('button');pill.className='event-pill active';pill.textContent=ev;pill.style.background=col.bg;pill.style.color=col.text;pill.style.borderColor=col.bg;
-    pill.addEventListener('click',function(){if(activeSet.has(ev)){activeSet.delete(ev);pill.style.background='transparent';pill.style.color='#555';pill.classList.remove('active');}else{activeSet.add(ev);pill.style.background=col.bg;pill.style.color=col.text;pill.classList.add('active');}onToggle();});
-    container.appendChild(pill);
+  var events=Object.keys(evColors);
+  function allActive(){return events.every(function(ev){return activeSet.has(ev);});}
+  function updateLbl(){
+    var all=allActive();
+    lbl.style.background=all?'#fff':'#000';
+    lbl.style.color=all?'#000':'#fff';
+    lbl.title=all?'Desmarcar todos':'Marcar todos';
+  }
+  var lbl=document.createElement('button');
+  lbl.className='filter-label';
+  lbl.textContent='EVENTO:';
+  lbl.style.cssText='cursor:pointer;padding:3px 8px;transition:background 0.15s,color 0.15s;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;border-radius:2px;white-space:nowrap;border:none;';
+  lbl.addEventListener('click',function(){
+    var activate=!allActive();
+    pills.forEach(function(p,i){
+      var ev=events[i],col=evColors[ev];
+      if(activate){activeSet.add(ev);p.style.background=col.bg;p.style.color=col.text;p.classList.add('active');}
+      else{activeSet.delete(ev);p.style.background='transparent';p.style.color='#555';p.classList.remove('active');}
+    });
+    updateLbl();onToggle();
   });
+  container.appendChild(lbl);
+  var pills=[];
+  events.forEach(function(ev){var col=evColors[ev];
+    var pill=document.createElement('button');pill.className='event-pill active';pill.textContent=ev;pill.style.background=col.bg;pill.style.color=col.text;pill.style.borderColor=col.bg;
+    pill.addEventListener('click',function(){
+      if(activeSet.has(ev)){activeSet.delete(ev);pill.style.background='transparent';pill.style.color='#555';pill.classList.remove('active');}
+      else{activeSet.add(ev);pill.style.background=col.bg;pill.style.color=col.text;pill.classList.add('active');}
+      updateLbl();onToggle();
+    });
+    container.appendChild(pill);pills.push(pill);
+  });
+  updateLbl();
 }
 /* helpers: sessões filtradas por evento */
 function sessoesFicha(){return sessoesArr.filter(function(s){return!s.evento||activeEventsFicha.has(s.evento);});}
@@ -1716,7 +1785,18 @@ function showTooltip(ev,s){
   tip.innerHTML='<div class="tt-name">'+s.nome+'</div><div class="tt-row">📅 <span>'+s.dia+'</span></div><div class="tt-row">⏰ <span>'+(s.time?s.time.str:'—')+(durStr?' · '+durStr:'')+'</span></div><div class="tt-row">🎭 <span>'+s.cinema+'</span></div>'+(s.evento?'<div class="tt-row">📋 <span>'+s.evento+'</span></div>':'')+(fl?'<div class="tt-films">'+fl+'</div>':'');
   tip.style.display='block';moveTooltip(ev);
 }
-function moveTooltip(ev){var tip=document.getElementById('tooltip');var x=ev.clientX+16,y=ev.clientY-8,tw=tip.offsetWidth,th2=tip.offsetHeight;tip.style.left=(x+tw>window.innerWidth?x-tw-32:x)+'px';tip.style.top=(y+th2>window.innerHeight?y-th2:y)+'px';}
+function moveTooltip(ev){
+  var tip=document.getElementById('tooltip');
+  var tw=tip.offsetWidth,th=tip.offsetHeight;
+  var mx=ev.clientX,my=ev.clientY;
+  var gap=8;// px between cursor and tooltip edge
+  var x=mx+gap,y=my+gap;
+  if(x+tw>window.innerWidth-gap) x=mx-tw-gap;
+  if(y+th>window.innerHeight-gap) y=my-th-gap;
+  if(x<gap) x=gap;
+  if(y<gap) y=gap;
+  tip.style.left=x+'px';tip.style.top=y+'px';
+}
 
 /* BUSCA */
 document.getElementById('searchInput').addEventListener('input',function(){buscaQuery=this.value.trim();document.getElementById('searchClear').style.display=buscaQuery?'block':'none';renderBuscaResults();});
@@ -1816,7 +1896,18 @@ function clearAllBuscaFilters(){
   renderBuscaResults();
 }
 
-function parseDurMinutes(v){if(!v)return null;v=v.toString().trim();var m=v.match(/^(\d+):(\d{2})$/);if(m)return parseInt(m[1])*60+parseInt(m[2]);var n=parseFloat(v.replace(',','.'));return isNaN(n)?null:n;}
+function parseDurMinutes(v){
+  if(!v)return null;
+  v=v.toString().trim();
+  // H:MM:SS ou HH:MM:SS — formato canônico da planilha
+  var m3=v.match(/^(\d{1,3}):(\d{2}):\d{2}/);
+  if(m3)return parseInt(m3[1])*60+parseInt(m3[2]);
+  // H:MM sem segundos — fallback
+  var m2=v.match(/^(\d+):(\d{2})$/);
+  if(m2)return parseInt(m2[1])*60+parseInt(m2[2]);
+  // número puro (minutos)
+  var n=parseFloat(v.replace(',','.'));return isNaN(n)?null:n;
+}
 function parseGB(v){if(!v)return null;var n=parseFloat(v.toString().replace(',','.'));return isNaN(n)?null:n;}
 
 function applyBuscaFilters(f){
@@ -1981,7 +2072,7 @@ function buildRangeFilters(){
       label:'Duração',unit:'min',
       minKey:'duracao_min',maxKey:'duracao_max',
       parse:parseDurMinutes,
-      minPh:'mín (min)',maxPh:'máx (min)',
+      minPh:'mín',maxPh:'máx',
       presets:[
         {label:'< 1h',min:null,max:59},
         {label:'1–2h',min:60,max:119},
@@ -1993,7 +2084,7 @@ function buildRangeFilters(){
       label:'Tamanho',unit:'GB',
       minKey:'gb_min',maxKey:'gb_max',
       parse:parseGB,
-      minPh:'mín (GB)',maxPh:'máx (GB)',
+      minPh:'mín',maxPh:'máx',
       presets:[
         {label:'< 50 GB',min:null,max:50},
         {label:'50–100 GB',min:50,max:100},
@@ -2102,6 +2193,7 @@ function renderBuscaResults(){
     var cpl=clean(f.cpl),obs=clean(f.obs),vf=clean(f.vf),leg=clean(f.legenda);
     var kdm=(f.kdm||'').toLowerCase()==='sim';
     var dur=fmtDur(clean(f.duracao)),gb=clean(f.gb),res=clean(f.resolucao),fps=clean(f.fps),hd=clean(f.hd);
+    var gbRaw=(f.gb&&f.gb!=='-')?f.gb.toString().trim():'';
     var cplOV=clean(f.cplOV);
     var sess=buscaReverseSessoes[f.codigo]||[];
     var legStr=vf?'VF '+vf:leg;
@@ -2135,6 +2227,7 @@ function renderBuscaResults(){
             (f.idioma?'<div class="meta-tag"><span class="label">Idioma</span>'+hl(f.idioma,buscaQuery)+'</div>':'')+
             (legStr?'<div class="meta-tag"><span class="label">Leg</span>'+hl(legStr,buscaQuery)+'</div>':'')+
             (dur&&dur!=='—'?'<div class="meta-tag"><span class="label">Dur</span>'+dur+'</div>':'')+
+            (gbRaw?'<div class="meta-tag"><span class="label">GB</span>'+gbRaw+'</div>':'')+
             resTag+
           '</div>'+
           (obs?'<div class="card-obs">'+hl(obs,buscaQuery)+'</div>':'')+
