@@ -615,6 +615,9 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 </div>
 <div class="mode-bar hidden" id="barCinemas">
   <div class="event-filters" id="cinemasEventFilters"></div>
+  <select id="cinemasEstadoSelect" style="min-width:120px;margin-left:8px;" onchange="cinemasEstadoFilter=this.value;rebuildCinemasComplexoSelect();renderCinemas();">
+    <option value="">Todos os estados</option>
+  </select>
   <select id="cinemasComplexoSelect" style="min-width:180px;margin-left:8px;" onchange="cinemasComplexoFilter=this.value;renderCinemas();">
     <option value="">Todos os complexos</option>
   </select>
@@ -623,7 +626,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 <div id="landing">
   <div class="landing-badge">sistema de gestão de exibição</div>
   <div class="landing-title">OLGA Suite</div>
-  <p class="landing-sub">Carregue o arquivo de programação para acessar os módulos de ficha, grade e busca.</p>
+  <p class="landing-sub">Carregue o arquivo de programação para acessar os módulos abaixo.</p>
   <div class="landing-drop" id="landingDrop">
     <div class="drop-icon">📂</div>
     <div class="drop-label">Carregar sistema_olga.xlsx</div>
@@ -795,7 +798,7 @@ self.onmessage=function(e){
     var rowsC=XLSX.utils.sheet_to_json(wsC,{header:1,raw:false});
     for(var i=1;i<rowsC.length;i++){
       var r=rowsC[i];var sala=(r[1]||'').toString().trim();if(!sala)continue;
-      cinemasArr.push({complexo:r[0]||'',sala:sala,servidor:r[2]||'',serial:(r[3]||'').toString().trim(),projetor:r[4]||'',assentos:r[5]||'',proporcao:(r[6]||'').toString().trim(),som:r[7]||'',obs:r[8]||'',cineassista:r[9]||'',evento:(r[10]||'').toString().trim()});
+      cinemasArr.push({complexo:r[0]||'',sala:sala,servidor:r[2]||'',serial:(r[3]||'').toString().trim(),projetor:r[4]||'',assentos:r[5]||'',proporcao:(r[6]||'').toString().trim(),som:r[7]||'',obs:r[8]||'',cineassista:r[9]||'',evento:(r[10]||'').toString().trim(),estado:(r[11]||'').toString().trim()});
     }
   }
   var evSet=new Set();
@@ -811,9 +814,10 @@ var filmesMap={},filmesArr=[],sessoesArr=[],sessoesMap={};
 var buscaReverseSessoes={},eventColors={};
 var activeEventsGrade=new Set(),activeEventsBusca=new Set(),activeEventsIngest=new Set(),activeEventsFicha=new Set(),activeEventsCinemas=new Set();
 var days=[],currentDay=null,buscaQuery='',dataLoaded=false,currentMode=null;
+var _browserNav=false;// flag: popstate is driving navigation — don't push new history entries
 var filteredFilmes=[];
 var cinemasArr=[];
-var cinemasComplexoFilter='',currentCinemaDetail=null;
+var cinemasComplexoFilter='',cinemasEstadoFilter='',currentCinemaDetail=null;
 var ingestDays=[],currentIngestDay=null,ingestCinemaFilter='',gradeCinemaFilter='';
 var navHistory=[];// stack of {mode, label} for back navigation
 var buscaFilters={
@@ -903,7 +907,7 @@ function parseWorkbook(data,filename){
     var rowsC=XLSX.utils.sheet_to_json(wsC,{header:1,raw:false});
     for(var i=1;i<rowsC.length;i++){
       var r=rowsC[i];var sala=(r[1]||'').toString().trim();if(!sala)continue;
-      cinemasArr.push({complexo:r[0]||'',sala:sala,servidor:r[2]||'',serial:(r[3]||'').toString().trim(),projetor:r[4]||'',assentos:r[5]||'',proporcao:(r[6]||'').toString().trim(),som:r[7]||'',obs:r[8]||'',cineassista:r[9]||'',evento:(r[10]||'').toString().trim()});
+      cinemasArr.push({complexo:r[0]||'',sala:sala,servidor:r[2]||'',serial:(r[3]||'').toString().trim(),projetor:r[4]||'',assentos:r[5]||'',proporcao:(r[6]||'').toString().trim(),som:r[7]||'',obs:r[8]||'',cineassista:r[9]||'',evento:(r[10]||'').toString().trim(),estado:(r[11]||'').toString().trim()});
     }
   }
   cinemasArr.forEach(function(c){if(c.evento)c.evento.split(';').forEach(function(e){var t=e.trim();if(t)evSet.add(t);});});
@@ -931,6 +935,7 @@ function moduleCardClick(mode){if(dataLoaded)switchMode(mode);}
 function switchMode(mode,noPush){
   currentMode=mode;
   if(!noPush){navHistory=[];updateBackBtn();}
+  if(!noPush&&!_browserNav)history.pushState({olga:mode},'');
   document.getElementById('landing').style.display='none';
   document.getElementById('app').style.display='block';
   ['ficha','grade','busca','ingest','cinemas'].forEach(function(m){
@@ -1388,16 +1393,36 @@ function buildCinemasFilters(){
   buildPills(document.getElementById('cinemasEventFilters'),eventColors,activeEventsCinemas,function(){
     renderCinemas();
   });
-  // populate complexo dropdown
+  // populate estado dropdown
+  var estados=new Set();
+  var all=getAllCinemas();
+  all.order.forEach(function(sala){var e=all.map[sala].estado;if(e)estados.add(e);});
+  var selE=document.getElementById('cinemasEstadoSelect');
+  selE.innerHTML='<option value="">Todos os estados</option>';
+  Array.from(estados).sort().forEach(function(e){
+    var o=document.createElement('option');o.value=e;o.textContent=e;selE.appendChild(o);
+  });
+  cinemasEstadoFilter='';
+  rebuildCinemasComplexoSelect();
+}
+
+function rebuildCinemasComplexoSelect(){
   var complexos=new Set();
   var all=getAllCinemas();
-  all.order.forEach(function(sala){complexos.add(all.map[sala].complexo||sala);});
+  all.order.forEach(function(sala){
+    var c=all.map[sala];
+    if(cinemasEstadoFilter&&c.estado!==cinemasEstadoFilter)return;
+    complexos.add(c.complexo||sala);
+  });
   var sel=document.getElementById('cinemasComplexoSelect');
+  var prev=sel.value;
   sel.innerHTML='<option value="">Todos os complexos</option>';
   Array.from(complexos).sort().forEach(function(c){
     var o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);
   });
-  cinemasComplexoFilter='';
+  // keep previous selection only if still valid
+  if(prev&&complexos.has(prev))sel.value=prev;
+  else{sel.value='';cinemasComplexoFilter='';}
 }
 
 function renderCinemas(){
@@ -1413,6 +1438,7 @@ function renderCinemas(){
   all.order.forEach(function(sala){
     var c=all.map[sala];
     var cx=c.complexo||sala;
+    if(cinemasEstadoFilter&&c.estado!==cinemasEstadoFilter)return;
     if(cinemasComplexoFilter&&cx!==cinemasComplexoFilter)return;
     if(!byComplexo[cx]){byComplexo[cx]=[];complexoOrder.push(cx);}
     byComplexo[cx].push(c);
@@ -1456,6 +1482,7 @@ function openCinemaDetail(sala){
   // push cinemas to history
   navHistory.push({mode:'_cinemaList',label:'Cinemas'});
   updateBackBtn();
+  if(!_browserNav)history.pushState({olga:'_cinemaDetail',sala:sala},'');
   currentCinemaDetail=sala;
   var all=getAllCinemas();
   var c=all.map[sala]||{complexo:sala,sala:sala,servidor:'',serial:'',projetor:'',assentos:'',proporcao:'',som:'',obs:'',cineassista:'',evento:''};
@@ -1465,10 +1492,9 @@ function openCinemaDetail(sala){
   ce.style.display='none';cc.style.display='none';dw.style.display='block';
 
   var allEvs=cinemaAllEvents(c);
-  var evTags=allEvs.map(function(ev){
+  var evTags=allEvs.filter(function(ev){return activeEventsCinemas.has(ev);}).map(function(ev){
     var col=eventColors[ev]||{bg:'var(--surface2)',text:'var(--text-dim)'};
-    var dim=!activeEventsCinemas.has(ev)?'opacity:0.35;':'';
-    return'<span class="cinema-ev-tag" style="background:'+col.bg+';color:'+col.text+';'+dim+'">'+ev+'</span>';
+    return'<span class="cinema-ev-tag" style="background:'+col.bg+';color:'+col.text+'">'+ev+'</span>';
   }).join('');
 
   var specsHtml='';
@@ -1523,7 +1549,7 @@ function openCinemaDetail(sala){
       sessHtml+='<div class="cinema-past-section" id="pastSessSection" style="display:none;">';
       past.slice().reverse().forEach(function(s){sessHtml+=sessRowHtml(s);});
       sessHtml+='</div>';
-      sessHtml+='<button class="cinema-past-toggle" onclick="togglePastSess(this)">▸ Ver '+past.length+' sessão'+(past.length===1?'':'ões')+' anterior'+(past.length===1?'':'es')+'</button>';
+      sessHtml+='<button class="cinema-past-toggle" onclick="togglePastSess(this)">▸ Ver '+past.length+' '+(past.length===1?'sessão anterior':'sessões anteriores')+'</button>';
     }
   }
 
@@ -1547,7 +1573,7 @@ function togglePastSess(btn){
   var open=sec.style.display!=='none';
   sec.style.display=open?'none':'block';
   var count=sec.querySelectorAll('.cinema-sess-row').length;
-  btn.textContent=(open?'▸':'▾')+' '+(open?'Ver ':'Ocultar ')+count+' sessão'+(count===1?'':'ões')+' anterior'+(count===1?'':'es');
+  btn.textContent=(open?'▸':'▾')+' '+(open?'Ver ':'Ocultar ')+count+' '+(count===1?'sessão anterior':'sessões anteriores');
 }
 
 
@@ -1622,6 +1648,7 @@ function updateBackBtn(){
 }
 
 function goToFicha(nomeSessao){
+  if(!_browserNav)history.pushState({olga:'ficha',session:nomeSessao},'');
   // push current mode to history before navigating
   if(currentMode&&currentMode!=='ficha'){
     var labels={grade:'Grade',busca:'Busca',ingest:'Ingest'};
@@ -2165,5 +2192,20 @@ function applyTheme(theme){
     if(t==='light')applyTheme('light');
   }catch(e){}
 })();
+
+/* BROWSER BACK BUTTON — intercept popstate so the user never leaves the page accidentally */
+history.replaceState({olga:'landing'},'');
+window.addEventListener('popstate',function(e){
+  _browserNav=true;
+  if(navHistory.length>0){
+    goBack();
+    // re-insert a state so further back presses still work
+    history.pushState({olga:currentMode||'landing'},'');
+  }else if(currentMode){
+    goHome();
+    // don't push here — next back press should leave the page normally
+  }
+  _browserNav=false;
+});
 </script>
 </html>
