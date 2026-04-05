@@ -332,6 +332,52 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
 .ingest-cplov-line{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--cpl-color);word-break:break-all;line-height:1.5;display:flex;gap:6px;align-items:baseline;}
 .ingest-cplov-tag{font-size:8px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:rgba(93,220,138,0.5);flex-shrink:0;border:1px solid rgba(93,220,138,0.25);padding:0px 4px;border-radius:2px;}
 .ingest-no-cpl{font-family:var(--mono);font-size:10px;color:var(--text-muted);font-style:italic;}
+/* CINEMAS */
+#cinemas-container{padding:24px 32px 48px;max-width:1200px;margin:0 auto;}
+.cinemas-complexo{margin-bottom:32px;}
+.cinemas-complexo-header{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-left:3px solid var(--accent);padding:8px 14px;}
+.cinemas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;border:1px solid var(--border);border-top:none;}
+.cinema-card{background:var(--surface);padding:14px 16px;cursor:pointer;transition:background 0.15s;border:none;text-align:left;width:100%;}
+.cinema-card:hover{background:var(--surface2);}
+.cinema-card-name{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.cinema-card-name-link{color:var(--accent);transition:opacity 0.15s;}
+.cinema-card:hover .cinema-card-name-link{opacity:0.8;}
+.cinema-card-arrow{font-family:var(--mono);font-size:10px;color:var(--text-muted);margin-left:auto;}
+.cinema-card-specs{display:flex;flex-wrap:wrap;gap:5px 10px;margin-bottom:7px;}
+.cinema-spec{font-family:var(--mono);font-size:9px;color:var(--text-muted);display:flex;gap:3px;}
+.cinema-spec-label{color:var(--text-muted);}
+.cinema-spec-val{color:var(--text-dim);}
+.cinema-card-events{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;}
+.cinema-ev-tag{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.06em;padding:1px 6px;border-radius:2px;white-space:nowrap;}
+.cinema-card-sessions-count{font-family:var(--mono);font-size:9px;color:var(--text-muted);margin-top:5px;}
+.cinema-no-event{font-family:var(--mono);font-size:9px;color:var(--text-muted);font-style:italic;}
+/* cinema detail */
+#cinemaDetailWrap{padding:24px 32px 48px;max-width:1100px;margin:0 auto;}
+.cinema-detail-header{background:var(--surface);border:1px solid var(--border);margin-bottom:20px;}
+.cinema-detail-title{font-family:var(--mono);font-size:22px;font-weight:600;color:var(--accent);letter-spacing:0.04em;padding:18px 24px 14px;border-bottom:1px solid var(--border);}
+.cinema-detail-meta{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid var(--border);}
+.cinema-detail-spec{padding:10px 18px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:3px;}
+.cinema-detail-spec:last-child{border-right:none;}
+.cinema-detail-spec-label{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-muted);}
+.cinema-detail-spec-val{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--text);}
+.cinema-detail-obs{padding:10px 24px;font-family:var(--sans);font-size:11px;font-style:italic;color:rgba(232,160,32,0.75);}
+.cinema-detail-sessions{background:var(--surface);border:1px solid var(--border);}
+.cinema-detail-sessions-header{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-muted);padding:10px 16px;border-bottom:1px solid var(--border);background:var(--surface2);}
+.cinema-sess-row{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.12s;}
+.cinema-sess-row:last-child{border-bottom:none;}
+.cinema-sess-row:hover{background:var(--surface2);}
+.cinema-sess-time{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--text);white-space:nowrap;}
+.cinema-sess-date{font-family:var(--mono);font-size:9px;color:var(--text-muted);white-space:nowrap;}
+.cinema-sess-name{font-family:var(--sans);font-size:12px;font-weight:600;color:var(--accent);flex:1;}
+.cinema-sess-films{font-family:var(--mono);font-size:9px;color:var(--text-muted);}
+.cinema-sess-body{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0;}
+.cinema-sess-film-list{font-family:var(--sans);font-size:10px;color:var(--text-muted);line-height:1.4;margin-top:1px;}
+.cinema-sess-dur{font-family:var(--mono);font-size:9px;color:var(--text-muted);white-space:nowrap;}
+.cinema-past-toggle{width:100%;padding:9px 16px;font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);background:var(--surface2);border:none;border-top:1px solid var(--border);cursor:pointer;text-align:center;transition:color 0.15s;}
+.cinema-past-toggle:hover{color:var(--text-dim);}
+.cinema-past-section{border-top:1px solid var(--border2);}
+.cinema-cineassista-sim{color:#ff8060;font-weight:600;}
+
 /* expand */
 .card-titulo-wrap{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
 .card-titulo-wrap:hover .card-titulo{color:var(--accent);}
@@ -501,6 +547,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
     <button class="nav-tab" id="tabGrade" disabled onclick="switchMode('grade')"><span class="tab-icon">📅</span> Grade</button>
     <button class="nav-tab" id="tabBusca" disabled onclick="switchMode('busca')"><span class="tab-icon">🔍</span> Busca</button>
     <button class="nav-tab" id="tabIngest" disabled onclick="switchMode('ingest')"><span class="tab-icon">📥</span> Ingest</button>
+    <button class="nav-tab" id="tabCinemas" disabled onclick="switchMode('cinemas')"><span class="tab-icon">🎭</span> Cinemas</button>
   </nav>
   <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Alternar esquema de cores">
     <span class="theme-toggle-icon" id="themeIcon">☀</span>
@@ -566,6 +613,12 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
   <div class="event-filters" id="ingestEventFilters" style="margin-left:4px;"></div>
   <button class="print-btn" onclick="printIngest()" style="margin-left:4px;">⎙ Imprimir</button>
 </div>
+<div class="mode-bar hidden" id="barCinemas">
+  <div class="event-filters" id="cinemasEventFilters"></div>
+  <select id="cinemasComplexoSelect" style="min-width:180px;margin-left:8px;" onchange="cinemasComplexoFilter=this.value;renderCinemas();">
+    <option value="">Todos os complexos</option>
+  </select>
+</div>
 
 <div id="landing">
   <div class="landing-badge">sistema de gestão de exibição</div>
@@ -576,7 +629,7 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
     <div class="drop-label">Carregar sistema_olga.xlsx</div>
     <div class="drop-sub">clique ou arraste o arquivo aqui</div>
   </div>
-  <div class="landing-modules" style="grid-template-columns:repeat(4,1fr);max-width:860px;">
+  <div class="landing-modules" style="grid-template-columns:repeat(5,1fr);max-width:1060px;">
     <div class="module-card disabled" id="modCardFicha" onclick="moduleCardClick('ficha')">
       <div class="module-icon">🎬</div>
       <div class="module-name">Ficha</div>
@@ -596,6 +649,11 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
       <div class="module-icon">📥</div>
       <div class="module-name">Ingest</div>
       <div class="module-desc">Cronograma de ingest por sala, com CPL e tamanhos</div>
+    </div>
+    <div class="module-card disabled" id="modCardCinemas" onclick="moduleCardClick('cinemas')">
+      <div class="module-icon">🎭</div>
+      <div class="module-name">Cinemas</div>
+      <div class="module-desc">Fichas técnicas das salas e equipamentos</div>
     </div>
   </div>
 </div>
@@ -639,6 +697,14 @@ mark{background:rgba(232,160,32,0.28);color:var(--accent);border-radius:2px;padd
       <p>Nenhuma sessão encontrada.</p>
     </div>
     <div id="ingest-container" style="display:none"></div>
+  </div>
+  <div class="mode-panel" id="cinemas-panel">
+    <div class="empty-state" id="cinemasEmpty">
+      <div class="icon">🎭</div>
+      <p>Nenhum cinema encontrado.</p>
+    </div>
+    <div id="cinemas-container" style="display:none;"></div>
+    <div id="cinemaDetailWrap" style="display:none;"></div>
   </div>
 </div>
 
@@ -721,16 +787,33 @@ self.onmessage=function(e){
       var s={nome:nome,cinema:r[1]||'',dia:fmtDateStr(r[2]),hora:fmtTimeStr(r[3]),filmes:codes,date:parseDate(r[2]),time:parseTime(r[3]),evento:evento};
       sessoesArr.push(s);sessoesMap[nome]=s;
       codes.forEach(function(c){if(!buscaReverseSessoes[c])buscaReverseSessoes[c]=[];buscaReverseSessoes[c].push(nome);});
-  self.postMessage({filmesMap:filmesMap,filmesArr:filmesArr,sessoesArr:sessoesArr,sessoesMap:sessoesMap,buscaReverseSessoes:buscaReverseSessoes,events:Array.from(evSet)});
+    }
+  }
+  var cinemasArr=[];
+  var wsC=wb.Sheets['cinemas'];
+  if(wsC){
+    var rowsC=XLSX.utils.sheet_to_json(wsC,{header:1,raw:false});
+    for(var i=1;i<rowsC.length;i++){
+      var r=rowsC[i];var sala=(r[1]||'').toString().trim();if(!sala)continue;
+      cinemasArr.push({complexo:r[0]||'',sala:sala,servidor:r[2]||'',serial:(r[3]||'').toString().trim(),projetor:r[4]||'',assentos:r[5]||'',proporcao:(r[6]||'').toString().trim(),som:r[7]||'',obs:r[8]||'',cineassista:r[9]||'',evento:(r[10]||'').toString().trim()});
+    }
+  }
+  var evSet=new Set();
+  filmesArr.forEach(function(f){if(f.evento)evSet.add(f.evento);});
+  sessoesArr.forEach(function(s){if(s.evento)evSet.add(s.evento);});
+  cinemasArr.forEach(function(c){if(c.evento)c.evento.split(';').forEach(function(e){var t=e.trim();if(t)evSet.add(t);});});
+  self.postMessage({filmesMap:filmesMap,filmesArr:filmesArr,sessoesArr:sessoesArr,sessoesMap:sessoesMap,buscaReverseSessoes:buscaReverseSessoes,cinemasArr:cinemasArr,events:Array.from(evSet)});
 };
 </script>
 
 <script>
 var filmesMap={},filmesArr=[],sessoesArr=[],sessoesMap={};
 var buscaReverseSessoes={},eventColors={};
-var activeEventsGrade=new Set(),activeEventsBusca=new Set(),activeEventsIngest=new Set(),activeEventsFicha=new Set();
+var activeEventsGrade=new Set(),activeEventsBusca=new Set(),activeEventsIngest=new Set(),activeEventsFicha=new Set(),activeEventsCinemas=new Set();
 var days=[],currentDay=null,buscaQuery='',dataLoaded=false,currentMode=null;
 var filteredFilmes=[];
+var cinemasArr=[];
+var cinemasComplexoFilter='',currentCinemaDetail=null;
 var ingestDays=[],currentIngestDay=null,ingestCinemaFilter='',gradeCinemaFilter='';
 var navHistory=[];// stack of {mode, label} for back navigation
 var buscaFilters={
@@ -771,13 +854,14 @@ function applyParsedData(d,filename){
   filmesMap=d.filmesMap;filmesArr=d.filmesArr;
   sessoesArr=d.sessoesArr;sessoesMap=d.sessoesMap;
   buscaReverseSessoes=d.buscaReverseSessoes;
+  if(d.cinemasArr)cinemasArr=d.cinemasArr;
   var events=d.events;
   eventColors={};events.forEach(function(ev,i){eventColors[ev]=PALETTE[i%PALETTE.length];});
-  activeEventsGrade=new Set(events);activeEventsBusca=new Set(events);activeEventsIngest=new Set(events);activeEventsFicha=new Set(events);
+  activeEventsGrade=new Set(events);activeEventsBusca=new Set(events);activeEventsIngest=new Set(events);activeEventsFicha=new Set(events);activeEventsCinemas=new Set(events);
   dataLoaded=true;
-  ['tabFicha','tabGrade','tabBusca','tabIngest'].forEach(function(id){document.getElementById(id).disabled=false;});
-  ['modCardFicha','modCardGrade','modCardBusca','modCardIngest'].forEach(function(id){document.getElementById(id).classList.remove('disabled');});
-  buildGradeDays();window._gradeYearsOpen=null;buildFichaFilters();buildGradeFilters();buildBuscaFilters();buildIngestDays();buildIngestFilters();buildBuscaFilterPanel();
+  ['tabFicha','tabGrade','tabBusca','tabIngest','tabCinemas'].forEach(function(id){document.getElementById(id).disabled=false;});
+  ['modCardFicha','modCardGrade','modCardBusca','modCardIngest','modCardCinemas'].forEach(function(id){document.getElementById(id).classList.remove('disabled');});
+  buildGradeDays();window._gradeYearsOpen=null;buildFichaFilters();buildGradeFilters();buildBuscaFilters();buildIngestDays();buildIngestFilters();buildBuscaFilterPanel();buildCinemasFilters();
   fileNameEl.textContent=filename||'arquivo carregado';
   fileNameEl.classList.add('loaded');
   landingDrop.classList.add('loaded');
@@ -813,15 +897,25 @@ function parseWorkbook(data,filename){
     }
   }
   var evSet=new Set();filmesArr.forEach(function(f){if(f.evento)evSet.add(f.evento);});sessoesArr.forEach(function(s){if(s.evento)evSet.add(s.evento);});
+  cinemasArr=[];
+  var wsC=wb.Sheets['cinemas'];
+  if(wsC){
+    var rowsC=XLSX.utils.sheet_to_json(wsC,{header:1,raw:false});
+    for(var i=1;i<rowsC.length;i++){
+      var r=rowsC[i];var sala=(r[1]||'').toString().trim();if(!sala)continue;
+      cinemasArr.push({complexo:r[0]||'',sala:sala,servidor:r[2]||'',serial:(r[3]||'').toString().trim(),projetor:r[4]||'',assentos:r[5]||'',proporcao:(r[6]||'').toString().trim(),som:r[7]||'',obs:r[8]||'',cineassista:r[9]||'',evento:(r[10]||'').toString().trim()});
+    }
+  }
+  cinemasArr.forEach(function(c){if(c.evento)c.evento.split(';').forEach(function(e){var t=e.trim();if(t)evSet.add(t);});});
   var events=Array.from(evSet);
-  applyParsedData({filmesMap:filmesMap,filmesArr:filmesArr,sessoesArr:sessoesArr,sessoesMap:sessoesMap,buscaReverseSessoes:buscaReverseSessoes,events:events},filename);
+  applyParsedData({filmesMap:filmesMap,filmesArr:filmesArr,sessoesArr:sessoesArr,sessoesMap:sessoesMap,buscaReverseSessoes:buscaReverseSessoes,cinemasArr:cinemasArr,events:events},filename);
 }
 
 function goHome(){
   if(currentMode){
     currentMode=null;
     navHistory=[];updateBackBtn();
-    ['ficha','grade','busca','ingest'].forEach(function(m){
+    ['ficha','grade','busca','ingest','cinemas'].forEach(function(m){
       var cap=m.charAt(0).toUpperCase()+m.slice(1);
       document.getElementById('tab'+cap).classList.remove('active');
       document.getElementById('bar'+cap).classList.add('hidden');
@@ -839,7 +933,7 @@ function switchMode(mode,noPush){
   if(!noPush){navHistory=[];updateBackBtn();}
   document.getElementById('landing').style.display='none';
   document.getElementById('app').style.display='block';
-  ['ficha','grade','busca','ingest'].forEach(function(m){
+  ['ficha','grade','busca','ingest','cinemas'].forEach(function(m){
     var cap=m.charAt(0).toUpperCase()+m.slice(1);
     document.getElementById('tab'+cap).classList.toggle('active',m===mode);
     document.getElementById('bar'+cap).classList.toggle('hidden',m!==mode);
@@ -847,6 +941,7 @@ function switchMode(mode,noPush){
   });
   if(mode==='grade')renderGrade();
   if(mode==='ingest')renderIngest();
+  if(mode==='cinemas')renderCinemas();
   if(mode==='busca'){
     var bl=document.getElementById('buscaLoading'),be2=document.getElementById('buscaEmpty'),br=document.getElementById('busca-results');
     bl.style.display='flex';be2.style.display='none';br.style.display='none';
@@ -1256,6 +1351,206 @@ function buildIngestFilters(){
   rebuildIngestCinemaSelect();
 }
 
+/* helpers: cinema event matching (semicolon-separated) */
+function cinemaEventTokens(c){
+  if(!c.evento)return[];
+  return c.evento.split(';').map(function(e){return e.trim();}).filter(Boolean);
+}
+
+/* build merged cinema list: sheet data + any sala from sessions not in sheet */
+function getAllCinemas(){
+  var map={};var order=[];
+  cinemasArr.forEach(function(c){map[c.sala]=c;order.push(c.sala);});
+  sessoesArr.forEach(function(s){
+    if(s.cinema&&!map[s.cinema]){
+      map[s.cinema]={complexo:s.cinema,sala:s.cinema,servidor:'',serial:'',projetor:'',assentos:'',proporcao:'',som:'',obs:'',cineassista:'',evento:''};
+      order.push(s.cinema);
+    }
+  });
+  return{map:map,order:order};
+}
+
+/* sessions for a given sala, filtered by active events */
+function sessoesByCinema(sala){
+  return sessoesArr.filter(function(s){
+    return s.cinema===sala&&(!s.evento||activeEventsCinemas.has(s.evento));
+  }).sort(function(a,b){return a.date&&b.date?a.date-b.date||0:0;});
+}
+
+/* derive merged event tokens for a cinema (sheet + sessions) */
+function cinemaAllEvents(c){
+  var evSet=new Set(cinemaEventTokens(c));
+  sessoesArr.forEach(function(s){if(s.cinema===c.sala&&s.evento)evSet.add(s.evento);});
+  return Array.from(evSet);
+}
+
+function buildCinemasFilters(){
+  buildPills(document.getElementById('cinemasEventFilters'),eventColors,activeEventsCinemas,function(){
+    renderCinemas();
+  });
+  // populate complexo dropdown
+  var complexos=new Set();
+  var all=getAllCinemas();
+  all.order.forEach(function(sala){complexos.add(all.map[sala].complexo||sala);});
+  var sel=document.getElementById('cinemasComplexoSelect');
+  sel.innerHTML='<option value="">Todos os complexos</option>';
+  Array.from(complexos).sort().forEach(function(c){
+    var o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);
+  });
+  cinemasComplexoFilter='';
+}
+
+function renderCinemas(){
+  currentCinemaDetail=null;
+  var ce=document.getElementById('cinemasEmpty');
+  var cc=document.getElementById('cinemas-container');
+  var dw=document.getElementById('cinemaDetailWrap');
+  dw.style.display='none';
+
+  var all=getAllCinemas();
+  // group by complexo
+  var byComplexo={},complexoOrder=[];
+  all.order.forEach(function(sala){
+    var c=all.map[sala];
+    var cx=c.complexo||sala;
+    if(cinemasComplexoFilter&&cx!==cinemasComplexoFilter)return;
+    if(!byComplexo[cx]){byComplexo[cx]=[];complexoOrder.push(cx);}
+    byComplexo[cx].push(c);
+  });
+
+  if(!complexoOrder.length){cc.style.display='none';ce.style.display='flex';return;}
+  ce.style.display='none';cc.style.display='block';
+
+  var html='<div style="padding:24px 32px 48px;max-width:1200px;margin:0 auto;">';
+  complexoOrder.forEach(function(cx){
+    html+='<div class="cinemas-complexo"><div class="cinemas-complexo-header">'+cx+'</div>';
+    html+='<div class="cinemas-grid">';
+    byComplexo[cx].forEach(function(c){
+      var allEvs=cinemaAllEvents(c);
+      var activeEvTags=allEvs.filter(function(ev){return activeEventsCinemas.has(ev);}).map(function(ev){
+        var col=eventColors[ev]||{bg:'var(--surface2)',text:'var(--text-dim)'};
+        return'<span class="cinema-ev-tag" style="background:'+col.bg+';color:'+col.text+'">'+ev+'</span>';
+      }).join('');
+      var sessCount=sessoesByCinema(c.sala).length;
+      var safeSala=c.sala.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      html+='<button class="cinema-card" onclick="openCinemaDetail(\''+safeSala+'\')">';
+      html+='<div class="cinema-card-name"><span class="cinema-card-name-link">'+c.sala+'</span><span class="cinema-card-arrow">→</span></div>';
+      // specs row
+      var specs=[];
+      if(c.servidor)specs.push('<span class="cinema-spec"><span class="cinema-spec-label">SRV</span><span class="cinema-spec-val">'+c.servidor+'</span></span>');
+      if(c.projetor)specs.push('<span class="cinema-spec"><span class="cinema-spec-label">PROJ</span><span class="cinema-spec-val">'+c.projetor+'</span></span>');
+      if(c.som)specs.push('<span class="cinema-spec"><span class="cinema-spec-label">SOM</span><span class="cinema-spec-val">'+c.som+'</span></span>');
+      if(c.assentos)specs.push('<span class="cinema-spec"><span class="cinema-spec-label">Assentos</span><span class="cinema-spec-val">'+c.assentos+'</span></span>');
+      if(specs.length)html+='<div class="cinema-card-specs">'+specs.join('')+'</div>';
+      if(activeEvTags)html+='<div class="cinema-card-events">'+activeEvTags+'</div>';
+      html+='<div class="cinema-card-sessions-count">'+sessCount+' '+(sessCount===1?'sessão':'sessões')+' nos eventos ativos</div>';
+      html+='</button>';
+    });
+    html+='</div></div>';
+  });
+  html+='</div>';
+  cc.innerHTML=html;
+}
+
+function openCinemaDetail(sala){
+  // push cinemas to history
+  navHistory.push({mode:'_cinemaList',label:'Cinemas'});
+  updateBackBtn();
+  currentCinemaDetail=sala;
+  var all=getAllCinemas();
+  var c=all.map[sala]||{complexo:sala,sala:sala,servidor:'',serial:'',projetor:'',assentos:'',proporcao:'',som:'',obs:'',cineassista:'',evento:''};
+  var ce=document.getElementById('cinemasEmpty');
+  var cc=document.getElementById('cinemas-container');
+  var dw=document.getElementById('cinemaDetailWrap');
+  ce.style.display='none';cc.style.display='none';dw.style.display='block';
+
+  var allEvs=cinemaAllEvents(c);
+  var evTags=allEvs.map(function(ev){
+    var col=eventColors[ev]||{bg:'var(--surface2)',text:'var(--text-dim)'};
+    var dim=!activeEventsCinemas.has(ev)?'opacity:0.35;':'';
+    return'<span class="cinema-ev-tag" style="background:'+col.bg+';color:'+col.text+';'+dim+'">'+ev+'</span>';
+  }).join('');
+
+  var specsHtml='';
+  function ds(label,val){if(!val)return'';return'<div class="cinema-detail-spec"><div class="cinema-detail-spec-label">'+label+'</div><div class="cinema-detail-spec-val">'+val+'</div></div>';}
+  specsHtml+=ds('Servidor',c.servidor);
+  specsHtml+=ds('Serial',c.serial);
+  specsHtml+=ds('Projetor',c.projetor);
+  specsHtml+=ds('Assentos',c.assentos);
+  specsHtml+=ds('Proporção',c.proporcao);
+  specsHtml+=ds('Som',c.som);
+  if(c.cineassista){specsHtml+='<div class="cinema-detail-spec"><div class="cinema-detail-spec-label">Cineassista</div><div class="cinema-detail-spec-val '+(c.cineassista.toString().toUpperCase()==='SIM'?'cinema-cineassista-sim':'')+'">'+c.cineassista+'</div></div>';}
+
+  var sessoes=sessoesByCinema(sala);
+  var today=new Date();today.setHours(0,0,0,0);
+
+  function sessRowHtml(s){
+    var evCol=s.evento&&eventColors[s.evento]?eventColors[s.evento]:null;
+    var evBadge=s.evento?'<span class="cinema-ev-tag" style="background:'+(evCol?evCol.bg:'var(--surface2)')+';color:'+(evCol?evCol.text:'var(--text-dim)')+'">'+s.evento+'</span>':'';
+    var safe=s.nome.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    // film titles
+    var filmTitles=s.filmes.map(function(c){var f=filmesMap[c];return f&&f.titulo?f.titulo:c;}).filter(Boolean).join(' · ');
+    // total duration
+    var totalMins=0;
+    s.filmes.forEach(function(c){var f=filmesMap[c];if(!f)return;var d=f.duracao||'';if(/^\d{1,2}:\d{2}/.test(d)){var p=d.split(':').map(Number);totalMins+=p[0]*60+p[1];}});
+    var durStr=totalMins>0?Math.floor(totalMins/60)+'h'+String(totalMins%60).padStart(2,'0'):'';
+    var html='<div class="cinema-sess-row" onclick="goToFicha(\''+safe+'\')">';
+    html+='<span class="cinema-sess-date">'+s.dia+'</span>';
+    html+='<span class="cinema-sess-time">'+s.hora+'</span>';
+    html+='<div class="cinema-sess-body">';
+    html+='<span class="cinema-sess-name">'+s.nome+'</span>';
+    if(filmTitles)html+='<span class="cinema-sess-film-list">'+filmTitles+'</span>';
+    html+='</div>';
+    if(evBadge)html+=evBadge;
+    if(durStr)html+='<span class="cinema-sess-dur">'+durStr+'</span>';
+    html+='</div>';
+    return html;
+  }
+
+  var upcoming=sessoes.filter(function(s){return!s.date||s.date>=today;});
+  var past=sessoes.filter(function(s){return s.date&&s.date<today;});
+
+  var sessHtml='';
+  if(!sessoes.length){
+    sessHtml='<div style="padding:20px 16px;font-family:var(--mono);font-size:11px;color:var(--text-muted);">Sem sessões para os eventos selecionados.</div>';
+  }else{
+    if(upcoming.length){
+      upcoming.forEach(function(s){sessHtml+=sessRowHtml(s);});
+    }else{
+      sessHtml='<div style="padding:14px 16px;font-family:var(--mono);font-size:11px;color:var(--text-muted);">Sem próximas sessões nos eventos selecionados.</div>';
+    }
+    if(past.length){
+      sessHtml+='<div class="cinema-past-section" id="pastSessSection" style="display:none;">';
+      past.slice().reverse().forEach(function(s){sessHtml+=sessRowHtml(s);});
+      sessHtml+='</div>';
+      sessHtml+='<button class="cinema-past-toggle" onclick="togglePastSess(this)">▸ Ver '+past.length+' sessão'+(past.length===1?'':'ões')+' anterior'+(past.length===1?'':'es')+'</button>';
+    }
+  }
+
+  dw.innerHTML='<div style="padding:24px 32px 48px;max-width:1100px;margin:0 auto;">'
+    +'<div class="cinema-detail-header">'
+    +'<div class="cinema-detail-title">'+sala+(c.complexo&&c.complexo!==sala?' <span style="font-size:13px;font-weight:400;opacity:0.5">'+c.complexo+'</span>':'')+'</div>'
+    +(specsHtml?'<div class="cinema-detail-meta">'+specsHtml+'</div>':'')
+    +(evTags?'<div style="padding:8px 16px;border-top:1px solid var(--border);display:flex;gap:4px;flex-wrap:wrap;">'+evTags+'</div>':'')
+    +(c.obs?'<div class="cinema-detail-obs">'+c.obs+'</div>':'')
+    +'</div>'
+    +'<div class="cinema-detail-sessions">'
+    +'<div class="cinema-detail-sessions-header">Próximas sessões</div>'
+    +sessHtml
+    +'</div>'
+    +'</div>';
+}
+
+function togglePastSess(btn){
+  var sec=document.getElementById('pastSessSection');
+  if(!sec)return;
+  var open=sec.style.display!=='none';
+  sec.style.display=open?'none':'block';
+  var count=sec.querySelectorAll('.cinema-sess-row').length;
+  btn.textContent=(open?'▸':'▾')+' '+(open?'Ver ':'Ocultar ')+count+' sessão'+(count===1?'':'ões')+' anterior'+(count===1?'':'es');
+}
+
+
 function renderDayTabs(){
   var container=document.getElementById('dayTabs');container.innerHTML='';
   // only days that have ≥1 session from an active event (and optional cinema filter)
@@ -1308,7 +1603,12 @@ function goBack(){
   if(!navHistory.length)return;
   var prev=navHistory.pop();
   updateBackBtn();
-  switchMode(prev.mode,true); // true = no push
+  if(prev.mode==='_cinemaList'){
+    // return to cinema list view within the cinemas module
+    renderCinemas();
+  }else{
+    switchMode(prev.mode,true);
+  }
 }
 
 function updateBackBtn(){
